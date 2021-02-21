@@ -25,7 +25,13 @@ public class UserInterface {
     infoViewController.setVersion(appProperties.getProperty("version"));
     infoViewController.setCopyright(appProperties.getProperty("copyright"));
 
-    mainViewController.setOnOpenInfo(() -> infoStage.show());
+    mainViewController.setOnOpenInfo(infoStage::show);
+    mainViewController.setOnCreateUserCommand(messageHandling::handle);
+    mainViewController.setOnUserQuery(
+        query -> {
+          var result = messageHandling.handle(query);
+          mainViewController.display(result);
+        });
   }
 
   public void run() {

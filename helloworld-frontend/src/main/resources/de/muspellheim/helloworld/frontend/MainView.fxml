@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.StackPane?>
+
+<VBox prefWidth="640.0" spacing="8.0" styleClass="small-window" stylesheets="@uwp.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.muspellheim.helloworld.frontend.MainViewController">
+   <children>
+      <Label styleClass="header" text="Hello World" />
+      <HBox fx:id="commandBar" styleClass="command-bar">
+         <children>
+            <MenuButton mnemonicParsing="false">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#handleOpenInfo" text="Info" />
+              </items>
+               <graphic>
+                  <ImageView pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@more-horiz.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <HBox.margin>
+                  <Insets left="8.0" />
+               </HBox.margin>
+            </MenuButton>
+         </children>
+      </HBox>
+      <StackPane>
+        <Label fx:id="greeting" />
+      </StackPane>
+   </children>
+</VBox>

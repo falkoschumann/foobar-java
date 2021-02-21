@@ -24,7 +24,7 @@ processResources {
 
 application {
   mainModule = 'de.muspellheim.helloworld'
-  mainClass = 'de.muspellheim.helloworld.App'
+  mainClassName = 'de.muspellheim.helloworld.App'
 }
 
 jlink {
@@ -74,30 +74,16 @@ if (Os.isFamily(Os.FAMILY_WINDOWS)) {
 gluonClient {
   resourcesList = ['app.properties']
   reflectionList = [
-    'de.muspellheim.helloworld.contract.data.Todo',
     'de.muspellheim.helloworld.frontend.MainViewController',
     'de.muspellheim.helloworld.frontend.InfoViewController',
     'javafx.geometry.Insets',
-    'javafx.scene.control.Button',
-    'javafx.scene.control.ChoiceBox',
     'javafx.scene.control.Label',
-    'javafx.scene.control.ListView',
     'javafx.scene.control.MenuButton',
     'javafx.scene.control.MenuItem',
-    'javafx.scene.control.Separator',
-    'javafx.scene.control.TextField',
-    'javafx.scene.control.ToggleButton',
-    'javafx.scene.control.Tooltip',
     'javafx.scene.image.Image',
     'javafx.scene.image.ImageView',
     'javafx.scene.layout.HBox',
     'javafx.scene.layout.VBox',
-    'javafx.scene.text.Text',
-    'javafx.scene.text.TextFlow',
-    'javafx.geometry.Insets',
-    'javafx.scene.control.Label',
-    'javafx.scene.image.Image',
-    'javafx.scene.image.ImageView',
-    'javafx.scene.layout.VBox',
+    'javafx.scene.layout.StackPane',
   ]
 }

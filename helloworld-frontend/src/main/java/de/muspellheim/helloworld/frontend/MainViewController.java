@@ -5,18 +5,25 @@
 
 package de.muspellheim.helloworld.frontend;
 
+import de.muspellheim.helloworld.contract.messages.commands.CreateUserCommand;
+import de.muspellheim.helloworld.contract.messages.queries.UserQuery;
+import de.muspellheim.helloworld.contract.messages.queries.UserQueryResult;
+import java.util.function.Consumer;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.Setter;
 
 public class MainViewController {
-
   @Getter @Setter private Runnable onOpenInfo;
+  @Getter @Setter private Consumer<CreateUserCommand> onCreateUserCommand;
+  @Getter @Setter private Consumer<UserQuery> onUserQuery;
 
   @FXML private HBox commandBar;
+  @FXML private Label greeting;
 
   public static MainViewController create(Stage stage) {
     var factory = new ViewControllerFactory(MainViewController.class);
@@ -36,9 +43,12 @@ public class MainViewController {
 
   public void run() {
     getWindow().show();
+    onUserQuery.accept(new UserQuery());
   }
 
-  public void display(Object result) {}
+  public void display(UserQueryResult result) {
+    greeting.setText("Hello " + result.getUser().getName());
+  }
 
   @FXML
   private void initialize() {}

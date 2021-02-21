@@ -6,6 +6,8 @@
 package de.muspellheim.helloworld;
 
 import de.muspellheim.helloworld.backend.MessageHandler;
+import de.muspellheim.helloworld.backend.adapters.MemoryUserRepository;
+import de.muspellheim.helloworld.contract.data.User;
 import de.muspellheim.helloworld.frontend.UserInterface;
 import java.io.InputStream;
 import java.util.Properties;
@@ -19,13 +21,17 @@ public class App extends Application {
 
   @Override
   public void start(Stage primaryStage) throws Exception {
-    var backend = new MessageHandler();
+    var userRepository = new MemoryUserRepository();
+    userRepository.setCurrentUser(new User("Alice"));
+    var backend = new MessageHandler(userRepository);
+
     var appIcon = getClass().getResource("/app.png");
     var appProperties = new Properties();
     try (InputStream in = getClass().getResourceAsStream("/app.properties")) {
       appProperties.load(in);
     }
     var frontend = new UserInterface(backend, primaryStage, appIcon, appProperties);
+
     frontend.run();
   }
 }

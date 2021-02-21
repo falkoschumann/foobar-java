@@ -17,7 +17,10 @@ public class MessageHandler implements MessageHandling {
   private CreateUserCommandHandler createUserCommandHandler;
   private UserQueryHandler userQueryHandler;
 
-  public MessageHandler() {}
+  public MessageHandler(UserRepository userRepository) {
+    createUserCommandHandler = new CreateUserCommandHandler(userRepository);
+    userQueryHandler = new UserQueryHandler(userRepository);
+  }
 
   @Override
   public CommandStatus handle(CreateUserCommand command) {
