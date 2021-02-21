@@ -13,7 +13,7 @@
             <Image url="@app.png" />
          </image>
       </ImageView>
-      <Label fx:id="title" styleClass="base" text="User Stories" />
+      <Label fx:id="title" styleClass="base" text="Hello World" />
       <Label fx:id="version" styleClass="caption" text="Version 1.0.0" />
       <VBox alignment="CENTER">
          <children>

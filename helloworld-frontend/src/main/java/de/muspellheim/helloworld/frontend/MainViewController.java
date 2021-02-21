@@ -1,5 +1,5 @@
 /*
- * User Stories - Frontend
+ * Hello World - Frontend
  * Copyright (c) 2021 Falko Schumann <falko.schumann@muspellheim.de>
  */
 
@@ -23,7 +23,7 @@ public class MainViewController {
 
     var scene = new Scene(factory.getView());
     stage.setScene(scene);
-    stage.setTitle("User Stories");
+    stage.setTitle("Hello World");
     stage.setMinWidth(320);
     stage.setMinHeight(569);
 

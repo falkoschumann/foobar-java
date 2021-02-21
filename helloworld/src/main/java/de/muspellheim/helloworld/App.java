@@ -1,5 +1,5 @@
 /*
- * User Stories - Application
+ * Hello World - Application
  * Copyright (c) 2020 Falko Schumann <falko.schumann@muspellheim.de>
  */
 

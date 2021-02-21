@@ -1,6 +1,6 @@
 ![Java CI](https://github.com/falkoschumann/helloworld-java/workflows/Java%20CI/badge.svg)
 
-# User Stories
+# Hello World
 
 TODO: Description
 

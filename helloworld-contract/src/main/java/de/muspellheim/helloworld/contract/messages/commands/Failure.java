@@ -1,5 +1,5 @@
 /*
- * User Stories - Contract
+ * Hello World - Contract
  * Copyright (c) 2021 Falko Schumann <falko.schumann@muspellheim.de>
  */
 
