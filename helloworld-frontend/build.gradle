@@ -1,0 +1,8 @@
+plugins {
+  id 'helloworld.java-library-conventions'
+  id 'helloworld.java-openjfx-conventions'
+}
+
+dependencies {
+  api project(':helloworld-contract')
+}
