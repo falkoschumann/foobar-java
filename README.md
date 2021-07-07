@@ -1,4 +1,4 @@
-![Java CI](https://github.com/falkoschumann/app-template-java/workflows/java-ci/badge.svg)
+![Java CI](https://github.com/falkoschumann/foobar-java/workflows/Java%20CI/badge.svg)
 
 # Foobar
 
