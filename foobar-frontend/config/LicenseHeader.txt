@@ -1,0 +1,5 @@
+/*
+ * Foobar - Frontend
+ * Copyright (c) $YEAR ACME Ltd. <contact@acme.com>
+ */
+

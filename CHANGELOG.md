@@ -11,9 +11,10 @@ The format is based on [Keep a Changelog][1], and this project adheres to
 
 ### Added
 
--   TODO Changelog
+- TODO Changelog
+
 
 [1]: https://keepachangelog.com/en/1.0.0/
 [2]: https://semver.org/spec/v2.0.0.html
-[Unreleased]: https://github.com/falkoschumann/helloworld-java/compare/v1.0.0...HEAD
-[1.0.0]: https://github.com/falkoschumann/helloworld-java/releases/tag/v1.0.0
+[Unreleased]: https://github.com/falkoschumann/app-template-java/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/falkoschumann/app-template-java/releases/tag/v1.0.0

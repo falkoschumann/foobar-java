@@ -1,0 +1,5 @@
+/*
+ * Foobar - Application
+ * Copyright (c) $YEAR ACME Ltd. <contact@acme.com>
+ */
+

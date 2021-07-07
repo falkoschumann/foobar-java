@@ -1,4 +1,0 @@
-plugins {
-  id 'helloworld.java-common-conventions'
-  id 'application'
-}

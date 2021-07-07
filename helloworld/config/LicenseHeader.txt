@@ -1,5 +1,0 @@
-/*
- * Hello World - Application
- * Copyright (c) $YEAR Falko Schumann <falko.schumann@muspellheim.de>
- */
-

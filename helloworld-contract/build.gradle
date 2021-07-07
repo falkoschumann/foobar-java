@@ -1,3 +1,0 @@
-plugins {
-  id 'helloworld.java-library-conventions'
-}
