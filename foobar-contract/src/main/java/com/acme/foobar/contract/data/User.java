@@ -5,16 +5,14 @@
 
 package com.acme.foobar.contract.data;
 
+import java.util.Objects;
 import java.util.UUID;
-import lombok.AllArgsConstructor;
-import lombok.NonNull;
-import lombok.Value;
 
-@Value
-@AllArgsConstructor
-public class User {
-  @NonNull String id;
-  @NonNull String name;
+public record User(String id, String name) {
+  public User {
+    Objects.requireNonNull(id, "id");
+    Objects.requireNonNull(name, "name");
+  }
 
   public User(String name) {
     this(UUID.randomUUID().toString(), name);

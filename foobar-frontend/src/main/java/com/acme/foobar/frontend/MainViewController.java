@@ -47,7 +47,7 @@ public class MainViewController {
   }
 
   public void display(UserQueryResult result) {
-    greeting.setText("Hello " + result.getUser().getName());
+    greeting.setText("Hello " + result.user().name());
   }
 
   @FXML

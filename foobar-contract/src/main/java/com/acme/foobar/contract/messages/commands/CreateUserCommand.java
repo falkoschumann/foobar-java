@@ -5,10 +5,10 @@
 
 package com.acme.foobar.contract.messages.commands;
 
-import lombok.NonNull;
-import lombok.Value;
+import java.util.Objects;
 
-@Value
-public class CreateUserCommand {
-  @NonNull String name;
+public record CreateUserCommand(String name) {
+  public CreateUserCommand {
+    Objects.requireNonNull(name, "name");
+  }
 }
