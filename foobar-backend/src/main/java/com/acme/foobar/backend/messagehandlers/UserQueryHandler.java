@@ -18,8 +18,8 @@ public class UserQueryHandler {
 
   public UserQueryResult handle(UserQuery query) {
     try {
-      var user = repository.getCurrentUser();
-      return new UserQueryResult(user);
+      var user = repository.findById(query.id());
+      return new UserQueryResult(user.orElse(null));
     } catch (Exception e) {
       return new UserQueryResult(null);
     }

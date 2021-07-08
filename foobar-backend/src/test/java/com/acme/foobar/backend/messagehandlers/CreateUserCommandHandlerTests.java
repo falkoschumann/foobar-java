@@ -24,7 +24,8 @@ class CreateUserCommandHandlerTests {
     var status = handler.handle(new CreateUserCommand("Alice"));
 
     assertEquals(new Success(), status);
-    assertThat(repository.getCurrentUser().id(), is(any(String.class)));
-    assertEquals("Alice", repository.getCurrentUser().name());
+    var user = repository.findAll().get(0);
+    assertThat(user.id(), is(any(String.class)));
+    assertEquals("Alice", user.name());
   }
 }

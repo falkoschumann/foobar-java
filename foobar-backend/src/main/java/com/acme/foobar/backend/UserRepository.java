@@ -6,9 +6,13 @@
 package com.acme.foobar.backend;
 
 import com.acme.foobar.contract.data.User;
+import java.util.List;
+import java.util.Optional;
 
 public interface UserRepository {
-  void setCurrentUser(User user) throws Exception;
+  List<User> findAll();
 
-  User getCurrentUser() throws Exception;
+  Optional<User> findById(String id);
+
+  void createUser(User user);
 }

@@ -7,7 +7,6 @@ package com.acme.foobar;
 
 import com.acme.foobar.backend.MessageHandler;
 import com.acme.foobar.backend.adapters.MemoryUserRepository;
-import com.acme.foobar.contract.data.User;
 import com.acme.foobar.frontend.UserInterface;
 import java.io.InputStream;
 import java.util.Properties;
@@ -22,7 +21,6 @@ public class App extends Application {
   @Override
   public void start(Stage primaryStage) throws Exception {
     var userRepository = new MemoryUserRepository();
-    userRepository.setCurrentUser(new User("Alice"));
     var backend = new MessageHandler(userRepository);
 
     var appIcon = getClass().getResource("/app.png");

@@ -5,4 +5,4 @@
 
 package com.acme.foobar.contract.messages.queries;
 
-public record UserQuery() {}
+public record UserQuery(String id) {}

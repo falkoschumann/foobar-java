@@ -43,7 +43,7 @@ public class MainViewController {
 
   public void run() {
     getWindow().show();
-    onUserQuery.accept(new UserQuery());
+    onUserQuery.accept(new UserQuery(null));
   }
 
   public void display(UserQueryResult result) {

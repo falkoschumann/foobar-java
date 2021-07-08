@@ -7,17 +7,25 @@ package com.acme.foobar.backend.adapters;
 
 import com.acme.foobar.backend.UserRepository;
 import com.acme.foobar.contract.data.User;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public class MemoryUserRepository implements UserRepository {
-  private User currentUser;
+  private final List<User> users = new ArrayList<>();
 
   @Override
-  public void setCurrentUser(User user) {
-    currentUser = user;
+  public List<User> findAll() {
+    return List.copyOf(users);
   }
 
   @Override
-  public User getCurrentUser() {
-    return currentUser;
+  public Optional<User> findById(String id) {
+    return users.stream().filter(it -> it.id().equals(id)).findAny();
+  }
+
+  @Override
+  public void createUser(User user) {
+    users.add(user);
   }
 }

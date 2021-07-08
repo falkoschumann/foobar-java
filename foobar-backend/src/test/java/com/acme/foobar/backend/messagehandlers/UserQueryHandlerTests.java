@@ -17,10 +17,10 @@ class UserQueryHandlerTests {
   @Test
   void handleSuccessfully() {
     var repository = new MemoryUserRepository();
-    repository.setCurrentUser(new User("#1", "Alice"));
+    repository.createUser(new User("#1", "Alice"));
     var handler = new UserQueryHandler(repository);
 
-    var result = handler.handle(new UserQuery());
+    var result = handler.handle(new UserQuery("#1"));
 
     assertEquals(new UserQueryResult(new User("#1", "Alice")), result);
   }

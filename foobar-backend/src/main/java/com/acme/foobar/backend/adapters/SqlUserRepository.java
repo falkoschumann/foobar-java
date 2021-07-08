@@ -5,20 +5,23 @@
 
 package com.acme.foobar.backend.adapters;
 
+import com.acme.foobar.backend.UserRepository;
 import com.acme.foobar.contract.data.User;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import javax.sql.DataSource;
 
-public class SqlRepository {
+public class SqlUserRepository implements UserRepository {
   private final DataSource dataSource;
 
-  public SqlRepository(DataSource dataSource) {
+  public SqlUserRepository(DataSource dataSource) {
     this.dataSource = dataSource;
   }
 
+  @Override
   public List<User> findAll() {
     var sql = """
       SELECT id, name,
@@ -31,11 +34,12 @@ public class SqlRepository {
         return mapUsers(resultSet);
       }
     } catch (SQLException e) {
-      throw new UncheckedSQLException(e);
+      throw new UncheckedSQLException("Error finding all users", e);
     }
   }
 
-  public User findById(String id) {
+  @Override
+  public Optional<User> findById(String id) {
     var sql = """
       SELECT id, name,
       FROM users
@@ -45,14 +49,18 @@ public class SqlRepository {
       try (var statement = connection.prepareStatement(sql)) {
         statement.setString(1, id);
         var resultSet = statement.executeQuery();
-        return mapUser(resultSet);
+        if (resultSet.next()) {
+          return Optional.of(mapUser(resultSet));
+        } else {
+          return Optional.empty();
+        }
       }
     } catch (SQLException e) {
-      throw new UncheckedSQLException(e);
+      throw new UncheckedSQLException("Error finding user by id", e);
     }
   }
 
-  private List<User> mapUsers(ResultSet resultSet) throws SQLException {
+  private static List<User> mapUsers(ResultSet resultSet) throws SQLException {
     var list = new ArrayList<User>();
     while (resultSet.next()) {
       list.add(mapUser(resultSet));
@@ -60,7 +68,24 @@ public class SqlRepository {
     return List.copyOf(list);
   }
 
-  private User mapUser(ResultSet resultSet) throws SQLException {
+  private static User mapUser(ResultSet resultSet) throws SQLException {
     return new User(resultSet.getString("id"), resultSet.getString("name"));
+  }
+
+  @Override
+  public void createUser(User user) {
+    var sql = """
+      INSERT INTO users (id, name)
+      VALUES (?, ?)
+      """;
+    try (var connection = dataSource.getConnection()) {
+      try (var statement = connection.prepareStatement(sql)) {
+        statement.setString(1, user.id());
+        statement.setString(2, user.name());
+        statement.executeUpdate();
+      }
+    } catch (SQLException e) {
+      throw new UncheckedSQLException("Error creating user", e);
+    }
   }
 }

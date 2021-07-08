@@ -21,7 +21,7 @@ public class CreateUserCommandHandler {
 
   public CommandStatus handle(CreateUserCommand command) {
     try {
-      repository.setCurrentUser(new User(command.name()));
+      repository.createUser(new User(command.name()));
       return new Success();
     } catch (Exception e) {
       return new Failure(e.getLocalizedMessage());
