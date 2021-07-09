@@ -35,7 +35,7 @@ und `{RequestUUID}` passend ersetzt werden.
 
 1. Notarisierung der App-Distribution beantragen:
 
-   `xcrun altool --notarize-app --primary-bundle-id com.acme.foobar --username $MAC_SIGNING_USERNAME --password $MAC_SIGNING_PASSWORD --file foobar/build/jpackage/foobar-1.1.0.dmg`
+   `xcrun altool --notarize-app --primary-bundle-id com.acme.helloworld --username $MAC_SIGNING_USERNAME --password $MAC_SIGNING_PASSWORD --file foobar/build/jpackage/foobar-1.1.0.dmg`
 
 2. Status der Notarisierung prüfen:
 
