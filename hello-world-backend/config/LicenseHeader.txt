@@ -1,5 +1,5 @@
 /*
- * Foobar - Backend
+ * Hello World - Backend
  * Copyright (c) $YEAR ACME Ltd. <contact@acme.com>
  */
 

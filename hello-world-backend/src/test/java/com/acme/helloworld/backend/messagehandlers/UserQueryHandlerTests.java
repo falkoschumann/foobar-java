@@ -1,5 +1,5 @@
 /*
- * Foobar - Backend
+ * Hello World - Backend
  * Copyright (c) 2021 ACME Ltd. <contact@acme.com>
  */
 
@@ -9,8 +9,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.acme.helloworld.backend.adapters.MemoryUserRepository;
 import com.acme.helloworld.contract.data.User;
-import com.acme.helloworld.contract.messages.queries.UserQuery;
-import com.acme.helloworld.contract.messages.queries.UserQueryResult;
+import com.acme.helloworld.contract.messages.queries.UsersQuery;
+import com.acme.helloworld.contract.messages.queries.UsersQueryResult;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 
 class UserQueryHandlerTests {
@@ -18,10 +19,10 @@ class UserQueryHandlerTests {
   void handleSuccessfully() {
     var repository = new MemoryUserRepository();
     repository.createUser(new User("#1", "Alice"));
-    var handler = new UserQueryHandler(repository);
+    var handler = new UsersQueryHandler(repository);
 
-    var result = handler.handle(new UserQuery("#1"));
+    var result = handler.handle(new UsersQuery());
 
-    assertEquals(new UserQueryResult(new User("#1", "Alice")), result);
+    assertEquals(new UsersQueryResult(List.of(new User("#1", "Alice"))), result);
   }
 }

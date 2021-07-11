@@ -1,8 +1,9 @@
-module com.acme.foobar.frontend {
+module com.acme.helloworld.frontend {
   requires static lombok;
-  requires com.acme.foobar.contract;
+  requires com.acme.helloworld.contract;
   requires javafx.controls;
   requires javafx.fxml;
+  requires jdk.localedata;
 
   exports com.acme.helloworld.frontend;
 

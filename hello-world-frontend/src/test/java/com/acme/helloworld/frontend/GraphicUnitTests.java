@@ -1,5 +1,5 @@
 /*
- * Foobar - Frontend
+ * Hello World - Frontend
  * Copyright (c) 2021 ACME Ltd. <contact@acme.com>
  */
 

@@ -1,5 +1,5 @@
-module com.acme.foobar.backend {
-  requires com.acme.foobar.contract;
+module com.acme.helloworld.backend {
+  requires com.acme.helloworld.contract;
   requires java.sql;
 
   exports com.acme.helloworld.backend;

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Scene?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.stage.Stage?>
+
+<Stage fx:id="stage" title="About Hello World" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.acme.helloworld.frontend.AboutController">
+  <scene>
+    <Scene stylesheets="@style.css">
+      <root>
+        <VBox alignment="CENTER" spacing="8.0">
+          <children>
+            <ImageView fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true">
+              <image>
+                <Image url="@app-icon.png" />
+              </image>
+            </ImageView>
+            <Label styleClass="base" text="Hello World" />
+            <Label styleClass="caption" text="%aboutView.versionLabel.text" />
+            <Label styleClass="caption" text="%aboutView.copyrightLabel.text" textAlignment="CENTER" />
+          </children>
+          <padding>
+            <Insets bottom="24.0" left="48.0" right="48.0" top="24.0" />
+          </padding>
+        </VBox>
+      </root>
+    </Scene>
+  </scene>
+</Stage>

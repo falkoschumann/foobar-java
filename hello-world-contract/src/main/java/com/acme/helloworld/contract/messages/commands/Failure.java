@@ -1,5 +1,5 @@
 /*
- * Foobar - Contract
+ * Hello World - Contract
  * Copyright (c) 2021 ACME Ltd. <contact@acme.com>
  */
 

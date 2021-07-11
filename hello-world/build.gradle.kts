@@ -3,7 +3,6 @@ import org.apache.tools.ant.taskdefs.condition.Os
 plugins {
   id("acme.java-application-conventions")
   id("acme.java-openjfx-conventions")
-  id("com.gluonhq.client-gradle-plugin")
   id("org.beryx.jlink")
 }
 
@@ -33,7 +32,7 @@ if (Os.isFamily(Os.FAMILY_MAC)) {
   jlink {
     jpackage {
       icon = "src/main/macos/AppIcon.icns"
-      imageName = "Foobar"
+      imageName = "Hello World"
       installerType = "dmg"
       imageOptions = listOf(
         "--copyright", "Copyright © 2020-${extra["copyrightYear"]} ACME Ltd.",
@@ -48,11 +47,11 @@ if (Os.isFamily(Os.FAMILY_WINDOWS)) {
   jlink {
     jpackage {
       icon = "src/main/win/app.ico"
-      imageName = "Foobar"
+      imageName = "Hello World"
       imageOptions = listOf(
         "--copyright", "Copyright (c) 2020-${extra["copyrightYear"]} ACME Ltd.",
       )
-      installerName = "Foobar"
+      installerName = "Hello World"
       installerType = "msi"
       installerOptions = listOf(
         "--copyright", "Copyright (c) 2020-${extra["copyrightYear"]} ACME Ltd.",

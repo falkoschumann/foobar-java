@@ -1,5 +1,5 @@
 /*
- * Foobar - Backend
+ * Hello World - Backend
  * Copyright (c) 2021 ACME Ltd. <contact@acme.com>
  */
 
@@ -11,7 +11,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import javax.sql.DataSource;
 
 public class SqlUserRepository implements UserRepository {
@@ -35,28 +34,6 @@ public class SqlUserRepository implements UserRepository {
       }
     } catch (SQLException e) {
       throw new UncheckedSQLException("Error finding all users", e);
-    }
-  }
-
-  @Override
-  public Optional<User> findById(String id) {
-    var sql = """
-      SELECT id, name,
-      FROM users
-      WHERE id = ?
-      """;
-    try (var connection = dataSource.getConnection()) {
-      try (var statement = connection.prepareStatement(sql)) {
-        statement.setString(1, id);
-        var resultSet = statement.executeQuery();
-        if (resultSet.next()) {
-          return Optional.of(mapUser(resultSet));
-        } else {
-          return Optional.empty();
-        }
-      }
-    } catch (SQLException e) {
-      throw new UncheckedSQLException("Error finding user by id", e);
     }
   }
 
