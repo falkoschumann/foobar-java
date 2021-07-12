@@ -5,6 +5,14 @@ on: [ push ]
 jobs:
   build:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_INITDB_ARGS: "--encoding=UTF8"
+          POSTGRES_DB: acme_test
+          POSTGRES_USER: acme_test
+          POSTGRES_PASSWORD: acme_test
     strategy:
       matrix:
         java: [ 16 ]
@@ -14,5 +22,7 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: ${{ matrix.java }}
+      - name: Prepare database
+        run: ./gradlew createSchema insertTestdata
       - name: Build with Gradle
         run: ./gradlew build

@@ -1,5 +1,6 @@
 plugins {
   id("acme.java-library-conventions")
+  id("acme.java-postgres-conventions")
 }
 
 dependencies {

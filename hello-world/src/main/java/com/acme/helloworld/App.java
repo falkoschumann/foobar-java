@@ -6,7 +6,9 @@
 package com.acme.helloworld;
 
 import com.acme.helloworld.backend.UserRepository;
+import com.acme.helloworld.backend.adapters.DataSourceFactory;
 import com.acme.helloworld.backend.adapters.MemoryUserRepository;
+import com.acme.helloworld.backend.adapters.SqlUserRepository;
 import com.acme.helloworld.backend.messagehandlers.CreateUserCommandHandler;
 import com.acme.helloworld.backend.messagehandlers.UsersQueryHandler;
 import com.acme.helloworld.contract.data.User;
@@ -24,9 +26,15 @@ public class App extends Application {
 
   @Override
   public void init() throws Exception {
-    // TODO Demo mode and SQL database
-    userRepository = new MemoryUserRepository();
-    userRepository.createUser(new User("Alice"));
+    if (getParameters().getUnnamed().contains("--demo")) {
+      userRepository = new MemoryUserRepository();
+      userRepository.createUser(new User("Alice"));
+    } else {
+      var dataSource =
+          DataSourceFactory.createDataSource(
+              "localhost", 5432, "acme_test", "acme_test", "acme_test");
+      userRepository = new SqlUserRepository(dataSource);
+    }
   }
 
   @Override

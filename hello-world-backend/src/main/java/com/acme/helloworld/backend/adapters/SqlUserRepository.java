@@ -23,7 +23,7 @@ public class SqlUserRepository implements UserRepository {
   @Override
   public List<User> findAll() {
     var sql = """
-      SELECT id, name,
+      SELECT id, name
       FROM users
       ORDER BY name
       """;

@@ -30,7 +30,7 @@ ext {
 }
 
 task<RunSQL>("createSchema") {
-  group = "verification"
+  group = "database"
   config {
     username = ext["databaseUser"] as String
     password = ext["databasePassword"] as String
@@ -42,7 +42,7 @@ task<RunSQL>("createSchema") {
 }
 
 task<RunSQL>("insertTestdata") {
-  group = "verification"
+  group = "database"
   config {
     username = ext["databaseUser"] as String
     password = ext["databasePassword"] as String
@@ -54,7 +54,7 @@ task<RunSQL>("insertTestdata") {
 }
 
 task<RunSQL>("deleteTestdata") {
-  group = "verification"
+  group = "database"
   config {
     username = ext["databaseUser"] as String
     password = ext["databasePassword"] as String

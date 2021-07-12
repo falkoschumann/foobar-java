@@ -1,0 +1,21 @@
+image: openjdk:16
+
+services:
+  - postgres
+
+variables:
+  POSTGRES_INITDB_ARGS: "--encoding=UTF8"
+  POSTGRES_DB: acme_test
+  POSTGRES_USER: acme_test
+  POSTGRES_PASSWORD: acme_test
+
+build:
+  script: ./gradlew build
+  artifacts:
+    when: always
+    reports:
+      junit: "**/build/test-results/test/**/TEST-*.xml"
+
+before_script:
+  - ./gradlew createSchema
+  - ./gradlew insertTestdata
