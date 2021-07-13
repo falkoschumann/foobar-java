@@ -9,7 +9,7 @@ dependencies {
 
 ext {
   if (!project.hasProperty("databaseHost")) {
-    if (System.getenv("GITLAB_CI") != null) {
+    if (System.getenv("CI") != null) {
       set("databaseHost", "postgres")
     } else {
       set("databaseHost", "localhost")

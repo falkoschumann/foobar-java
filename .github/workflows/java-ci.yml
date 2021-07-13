@@ -23,6 +23,6 @@ jobs:
         with:
           java-version: ${{ matrix.java }}
       - name: Prepare database
-        run: ./gradlew createSchema insertTestdata
+        run: ./gradlew createSchema insertTestdata --stacktrace
       - name: Build with Gradle
-        run: ./gradlew build --stacktrace
+        run: ./gradlew build
