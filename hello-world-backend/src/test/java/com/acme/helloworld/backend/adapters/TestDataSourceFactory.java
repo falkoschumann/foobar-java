@@ -9,7 +9,7 @@ import javax.sql.DataSource;
 
 public class TestDataSourceFactory {
   public static DataSource createDataSource() {
-    var host = System.getenv("CI") != null ? "postgres" : "localhost";
+    var host = System.getenv("GITLAB_CI") != null ? "postgres" : "localhost";
     return DataSourceFactory.createDataSource(host, 5432, "acme_test", "acme_test", "acme_test");
   }
 }

@@ -13,6 +13,8 @@ jobs:
           POSTGRES_DB: acme_test
           POSTGRES_USER: acme_test
           POSTGRES_PASSWORD: acme_test
+        ports:
+          - 5432:5432
     strategy:
       matrix:
         java: [ 16 ]
