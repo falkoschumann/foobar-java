@@ -10,9 +10,9 @@ import static org.hamcrest.Matchers.any;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.acme.helloworld.backend.adapters.DataSourceFactory;
 import com.acme.helloworld.backend.adapters.MemoryUserRepository;
 import com.acme.helloworld.backend.adapters.SqlUserRepository;
+import com.acme.helloworld.backend.adapters.TestDataSourceFactory;
 import com.acme.helloworld.contract.messages.commands.CreateUserCommand;
 import com.acme.helloworld.contract.messages.commands.Success;
 import javax.sql.DataSource;
@@ -25,9 +25,7 @@ class CreateUserCommandHandlerTests {
 
   @BeforeAll
   static void initAll() {
-    var host = System.getenv("CI") != null ? "postgres" : "localhost";
-    dataSource =
-        DataSourceFactory.createDataSource(host, 5432, "acme_test", "acme_test", "acme_test");
+    dataSource = TestDataSourceFactory.createDataSource();
   }
 
   @Test
