@@ -5,13 +5,17 @@
 
 package com.acme.helloworld;
 
+import com.acme.helloworld.backend.PreferencesRepository;
 import com.acme.helloworld.backend.UserRepository;
 import com.acme.helloworld.backend.adapters.DataSourceFactory;
+import com.acme.helloworld.backend.adapters.JavaPreferencesRepository;
+import com.acme.helloworld.backend.adapters.MemoryPreferencesRepository;
 import com.acme.helloworld.backend.adapters.MemoryUserRepository;
 import com.acme.helloworld.backend.adapters.SqlUserRepository;
 import com.acme.helloworld.backend.messagehandlers.CreateUserCommandHandler;
 import com.acme.helloworld.backend.messagehandlers.UsersQueryHandler;
-import com.acme.helloworld.contract.data.User;
+import com.acme.helloworld.backend.messagehandlers.WindowBoundsChangedNotificationHandler;
+import com.acme.helloworld.backend.messagehandlers.WindowBoundsQueryHandler;
 import com.acme.helloworld.contract.messages.queries.UsersQuery;
 import com.acme.helloworld.frontend.HelloWorldController;
 import javafx.application.Application;
@@ -19,28 +23,33 @@ import javafx.stage.Stage;
 
 public class App extends Application {
   private UserRepository userRepository;
+  private PreferencesRepository preferencesRepository;
 
   public static void main(String[] args) {
     Application.launch(args);
   }
 
   @Override
-  public void init() throws Exception {
+  public void init() {
     if (getParameters().getUnnamed().contains("--demo")) {
-      userRepository = new MemoryUserRepository();
-      userRepository.createUser(new User("Alice"));
+      userRepository = new MemoryUserRepository().addExamples();
+      preferencesRepository = new MemoryPreferencesRepository();
     } else {
       var dataSource =
           DataSourceFactory.createDataSource(
               "localhost", 5432, "acme_test", "acme_test", "acme_test");
       userRepository = new SqlUserRepository(dataSource);
+      preferencesRepository = new JavaPreferencesRepository();
     }
   }
 
   @Override
-  public void start(Stage primaryStage) throws Exception {
+  public void start(Stage primaryStage) {
     var createUserCommandHandler = new CreateUserCommandHandler(userRepository);
     var usersQueryHandler = new UsersQueryHandler(userRepository);
+    var windowBoundsQueryHandler = new WindowBoundsQueryHandler(preferencesRepository);
+    var windowBoundsChangedNotificationHandler =
+        new WindowBoundsChangedNotificationHandler(preferencesRepository);
     var frontend = HelloWorldController.create(primaryStage);
 
     frontend.setOnCreateUserCommand(
@@ -54,6 +63,12 @@ public class App extends Application {
           var result = usersQueryHandler.handle(q);
           frontend.display(result);
         });
+    frontend.setOnWindowBoundsQuery(
+        q -> {
+          var result = windowBoundsQueryHandler.handle(q);
+          frontend.display(result);
+        });
+    frontend.setOnWindowBoundsChangedNotification(windowBoundsChangedNotificationHandler::handle);
 
     frontend.run();
   }

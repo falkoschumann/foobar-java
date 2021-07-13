@@ -16,7 +16,7 @@
           <children>
             <ImageView fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true">
               <image>
-                <Image url="@app-icon.png" />
+                <Image url="@app-icon@2x.png" />
               </image>
             </ImageView>
             <Label styleClass="base" text="Hello World" />

@@ -33,7 +33,7 @@ class CreateUserCommandHandlerTests {
   @Test
   void handleSuccessfully_Memory() {
     var repository = new MemoryUserRepository();
-    repository.initWithTestdata();
+    repository.addExamples();
     var handler = new CreateUserCommandHandler(repository);
 
     var status = handler.handle(new CreateUserCommand("Bob"));

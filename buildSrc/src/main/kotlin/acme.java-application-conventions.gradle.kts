@@ -24,7 +24,7 @@ if (Os.isFamily(Os.FAMILY_MAC)) {
       icon = "src/main/macos/AppIcon.icns"
       imageOptions.addAll(
         listOf(
-          "--copyright", "Copyright © 2020-${extra["copyrightYear"]} ACME Ltd.",
+          "--copyright", "Copyright © ${extra["copyrightYear"]} ACME Ltd.",
           "--mac-sign",
           "--mac-signing-key-user-name", "Falko Schumann (QC6EN37P56)"
         )
@@ -39,11 +39,11 @@ if (Os.isFamily(Os.FAMILY_WINDOWS)) {
     jpackage {
       icon = "src/main/win/app.ico"
       imageOptions = listOf(
-        "--copyright", "Copyright (c) 2020-${extra["copyrightYear"]} ACME Ltd.",
+        "--copyright", "Copyright (c) ${extra["copyrightYear"]} ACME Ltd.",
       )
       installerType = "msi"
       installerOptions = listOf(
-        "--copyright", "Copyright (c) 2020-${extra["copyrightYear"]} ACME Ltd.",
+        "--copyright", "Copyright (c) ${extra["copyrightYear"]} ACME Ltd.",
         "--license-file", "../LICENSE.txt",
         "--win-dir-chooser",
         "--win-menu",

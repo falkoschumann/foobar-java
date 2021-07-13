@@ -13,8 +13,9 @@ import java.util.List;
 public class MemoryUserRepository implements UserRepository {
   private final List<User> users = new ArrayList<>();
 
-  public void initWithTestdata() {
+  public UserRepository addExamples() {
     users.add(new User("0dc31588-bda7-4987-adc5-ad4413fc3e54", "Alice"));
+    return this;
   }
 
   @Override

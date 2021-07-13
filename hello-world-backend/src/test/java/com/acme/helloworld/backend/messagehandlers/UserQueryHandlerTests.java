@@ -31,7 +31,7 @@ class UserQueryHandlerTests {
   @Test
   void handleSuccessfully_Memory() {
     var repository = new MemoryUserRepository();
-    repository.initWithTestdata();
+    repository.addExamples();
     var handler = new UsersQueryHandler(repository);
 
     var result = handler.handle(new UsersQuery());
