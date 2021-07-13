@@ -18,6 +18,6 @@ public class WindowBoundsQueryHandler {
 
   public WindowBoundsQueryResult handle(WindowBoundsQuery query) {
     var bounds = preferencesRepository.loadWindowBounds();
-    return new WindowBoundsQueryResult(bounds);
+    return new WindowBoundsQueryResult(bounds.x(), bounds.y(), bounds.width(), bounds.height());
   }
 }

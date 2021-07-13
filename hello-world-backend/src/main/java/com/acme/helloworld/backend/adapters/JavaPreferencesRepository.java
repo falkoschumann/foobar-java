@@ -6,8 +6,6 @@
 package com.acme.helloworld.backend.adapters;
 
 import com.acme.helloworld.backend.PreferencesRepository;
-import com.acme.helloworld.contract.data.WindowBounds;
-import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 public class JavaPreferencesRepository implements PreferencesRepository {
@@ -34,10 +32,5 @@ public class JavaPreferencesRepository implements PreferencesRepository {
     preferences.putDouble(WINDOW_BOUNDS_Y, bounds.y());
     preferences.putDouble(WINDOW_BOUNDS_WIDTH, bounds.width());
     preferences.putDouble(WINDOW_BOUNDS_HEIGHT, bounds.height());
-    try {
-      preferences.flush();
-    } catch (BackingStoreException e) {
-      throw new IllegalStateException(e);
-    }
   }
 }

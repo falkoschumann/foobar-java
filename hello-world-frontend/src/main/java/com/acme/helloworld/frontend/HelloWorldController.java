@@ -5,9 +5,8 @@
 
 package com.acme.helloworld.frontend;
 
-import com.acme.helloworld.contract.data.WindowBounds;
+import com.acme.helloworld.contract.messages.commands.ChangeWindowBoundsCommand;
 import com.acme.helloworld.contract.messages.commands.CreateUserCommand;
-import com.acme.helloworld.contract.messages.notifications.WindowBoundsChangedNotification;
 import com.acme.helloworld.contract.messages.queries.UsersQuery;
 import com.acme.helloworld.contract.messages.queries.UsersQueryResult;
 import com.acme.helloworld.contract.messages.queries.WindowBoundsQuery;
@@ -28,11 +27,9 @@ import lombok.Setter;
 
 public class HelloWorldController {
   @Getter @Setter private Consumer<CreateUserCommand> onCreateUserCommand;
+  @Getter @Setter private Consumer<ChangeWindowBoundsCommand> onChangeWindowBoundsCommand;
   @Getter @Setter private Consumer<UsersQuery> onUsersQuery;
   @Getter @Setter private Consumer<WindowBoundsQuery> onWindowBoundsQuery;
-
-  @Getter @Setter
-  private Consumer<WindowBoundsChangedNotification> onWindowBoundsChangedNotification;
 
   @FXML private Stage stage;
   @FXML private MenuBar menuBar;
@@ -65,14 +62,14 @@ public class HelloWorldController {
   }
 
   public void display(WindowBoundsQueryResult result) {
-    if (WindowBounds.NULL.equals(result.bounds())) {
+    if (result.isNull()) {
       return;
     }
 
-    var x = result.bounds().x();
-    var y = result.bounds().y();
-    var width = result.bounds().width();
-    var height = result.bounds().height();
+    var x = result.x();
+    var y = result.y();
+    var width = result.width();
+    var height = result.height();
 
     if (Screen.getScreensForRectangle(x, y, width, height).isEmpty()) {
       return;
@@ -101,9 +98,9 @@ public class HelloWorldController {
   }
 
   private void windowBoundsChanged() {
-    onWindowBoundsChangedNotification.accept(
-        new WindowBoundsChangedNotification(
-            new WindowBounds(stage.getX(), stage.getY(), stage.getWidth(), stage.getHeight())));
+    onChangeWindowBoundsCommand.accept(
+        new ChangeWindowBoundsCommand(
+            stage.getX(), stage.getY(), stage.getWidth(), stage.getHeight()));
   }
 
   @FXML

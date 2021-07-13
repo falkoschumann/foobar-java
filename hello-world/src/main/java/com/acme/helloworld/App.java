@@ -15,7 +15,6 @@ import com.acme.helloworld.backend.adapters.SqlUserRepository;
 import com.acme.helloworld.backend.messagehandlers.ChangeWindowBoundsCommandHandler;
 import com.acme.helloworld.backend.messagehandlers.CreateUserCommandHandler;
 import com.acme.helloworld.backend.messagehandlers.UsersQueryHandler;
-import com.acme.helloworld.backend.messagehandlers.WindowBoundsChangedNotificationHandler;
 import com.acme.helloworld.backend.messagehandlers.WindowBoundsQueryHandler;
 import com.acme.helloworld.contract.messages.queries.UsersQuery;
 import com.acme.helloworld.frontend.HelloWorldController;
@@ -51,17 +50,15 @@ public class App extends Application {
         new ChangeWindowBoundsCommandHandler(preferencesRepository);
     var usersQueryHandler = new UsersQueryHandler(userRepository);
     var windowBoundsQueryHandler = new WindowBoundsQueryHandler(preferencesRepository);
-    var windowBoundsChangedNotificationHandler = new WindowBoundsChangedNotificationHandler();
     var frontend = HelloWorldController.create(primaryStage);
 
-    windowBoundsChangedNotificationHandler.setOnChangeWindowBoundsCommand(
-        changeWindowBoundsCommandHandler::handle);
     frontend.setOnCreateUserCommand(
         c -> {
           createUserCommandHandler.handle(c);
           var result = usersQueryHandler.handle(new UsersQuery());
           frontend.display(result);
         });
+    frontend.setOnChangeWindowBoundsCommand(changeWindowBoundsCommandHandler::handle);
     frontend.setOnUsersQuery(
         q -> {
           var result = usersQueryHandler.handle(q);
@@ -72,7 +69,6 @@ public class App extends Application {
           var result = windowBoundsQueryHandler.handle(q);
           frontend.display(result);
         });
-    frontend.setOnWindowBoundsChangedNotification(windowBoundsChangedNotificationHandler::handle);
 
     frontend.run();
   }

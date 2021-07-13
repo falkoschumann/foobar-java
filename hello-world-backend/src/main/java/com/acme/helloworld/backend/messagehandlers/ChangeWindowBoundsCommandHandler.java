@@ -6,6 +6,7 @@
 package com.acme.helloworld.backend.messagehandlers;
 
 import com.acme.helloworld.backend.PreferencesRepository;
+import com.acme.helloworld.backend.PreferencesRepository.WindowBounds;
 import com.acme.helloworld.contract.messages.commands.ChangeWindowBoundsCommand;
 import com.acme.helloworld.contract.messages.commands.CommandStatus;
 import com.acme.helloworld.contract.messages.commands.Success;
@@ -18,7 +19,8 @@ public class ChangeWindowBoundsCommandHandler {
   }
 
   public CommandStatus handle(ChangeWindowBoundsCommand command) {
-    preferencesRepository.storeWindowBounds(command.bounds());
+    preferencesRepository.storeWindowBounds(
+        new WindowBounds(command.x(), command.y(), command.width(), command.height()));
     return new Success();
   }
 }

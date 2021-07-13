@@ -5,6 +5,4 @@
 
 package com.acme.helloworld.contract.messages.commands;
 
-import com.acme.helloworld.contract.data.WindowBounds;
-
-public record ChangeWindowBoundsCommand(WindowBounds bounds) {}
+public record ChangeWindowBoundsCommand(double x, double y, double width, double height) {}
