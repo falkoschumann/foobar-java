@@ -10,7 +10,6 @@ import com.acme.helloworld.contract.messages.queries.WindowBoundsQuery;
 import com.acme.helloworld.contract.messages.queries.WindowBoundsQueryResult;
 
 public class WindowBoundsQueryHandler {
-  // TODO Schreibe Test
   private final PreferencesRepository preferencesRepository;
 
   public WindowBoundsQueryHandler(PreferencesRepository preferencesRepository) {

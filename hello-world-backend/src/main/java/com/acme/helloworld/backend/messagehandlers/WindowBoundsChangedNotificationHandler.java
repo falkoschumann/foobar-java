@@ -5,19 +5,16 @@
 
 package com.acme.helloworld.backend.messagehandlers;
 
-import com.acme.helloworld.backend.PreferencesRepository;
+import com.acme.helloworld.contract.messages.commands.ChangeWindowBoundsCommand;
 import com.acme.helloworld.contract.messages.notifications.WindowBoundsChangedNotification;
+import java.util.function.Consumer;
+import lombok.Getter;
+import lombok.Setter;
 
 public class WindowBoundsChangedNotificationHandler {
-  // TODO Schreibe Test
-  private final PreferencesRepository preferencesRepository;
-
-  public WindowBoundsChangedNotificationHandler(PreferencesRepository preferencesRepository) {
-    this.preferencesRepository = preferencesRepository;
-  }
+  @Getter @Setter private Consumer<ChangeWindowBoundsCommand> onChangeWindowBoundsCommand;
 
   public void handle(WindowBoundsChangedNotification notification) {
-    // FIXME Notification muss Command erzeugen und darf nicht selber handeln!!
-    preferencesRepository.storeWindowBounds(notification.bounds());
+    onChangeWindowBoundsCommand.accept(new ChangeWindowBoundsCommand(notification.bounds()));
   }
 }

@@ -11,6 +11,10 @@ import com.acme.helloworld.contract.data.WindowBounds;
 public class MemoryPreferencesRepository implements PreferencesRepository {
   private WindowBounds windowBounds = WindowBounds.NULL;
 
+  public void addExamples() {
+    windowBounds = new WindowBounds(36, 24, 640, 480);
+  }
+
   @Override
   public WindowBounds loadWindowBounds() {
     return windowBounds;

@@ -27,7 +27,7 @@ class UserQueryHandlerTests {
   }
 
   @Test
-  void handleSuccessfully_Memory() {
+  void handle_Memory() {
     var repository = new MemoryUserRepository();
     repository.addExamples();
     var handler = new UsersQueryHandler(repository);
@@ -40,7 +40,7 @@ class UserQueryHandlerTests {
   }
 
   @Test
-  void handleSuccessfully_Database() {
+  void handle_Database() {
     var repository = new SqlUserRepository(dataSource);
     var handler = new UsersQueryHandler(repository);
 

@@ -1,4 +1,5 @@
 module com.acme.helloworld.backend {
+  requires static lombok;
   requires transitive com.acme.helloworld.contract;
   requires org.postgresql.jdbc;
   requires java.naming;

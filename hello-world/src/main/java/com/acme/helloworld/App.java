@@ -12,6 +12,7 @@ import com.acme.helloworld.backend.adapters.JavaPreferencesRepository;
 import com.acme.helloworld.backend.adapters.MemoryPreferencesRepository;
 import com.acme.helloworld.backend.adapters.MemoryUserRepository;
 import com.acme.helloworld.backend.adapters.SqlUserRepository;
+import com.acme.helloworld.backend.messagehandlers.ChangeWindowBoundsCommandHandler;
 import com.acme.helloworld.backend.messagehandlers.CreateUserCommandHandler;
 import com.acme.helloworld.backend.messagehandlers.UsersQueryHandler;
 import com.acme.helloworld.backend.messagehandlers.WindowBoundsChangedNotificationHandler;
@@ -46,12 +47,15 @@ public class App extends Application {
   @Override
   public void start(Stage primaryStage) {
     var createUserCommandHandler = new CreateUserCommandHandler(userRepository);
+    var changeWindowBoundsCommandHandler =
+        new ChangeWindowBoundsCommandHandler(preferencesRepository);
     var usersQueryHandler = new UsersQueryHandler(userRepository);
     var windowBoundsQueryHandler = new WindowBoundsQueryHandler(preferencesRepository);
-    var windowBoundsChangedNotificationHandler =
-        new WindowBoundsChangedNotificationHandler(preferencesRepository);
+    var windowBoundsChangedNotificationHandler = new WindowBoundsChangedNotificationHandler();
     var frontend = HelloWorldController.create(primaryStage);
 
+    windowBoundsChangedNotificationHandler.setOnChangeWindowBoundsCommand(
+        changeWindowBoundsCommandHandler::handle);
     frontend.setOnCreateUserCommand(
         c -> {
           createUserCommandHandler.handle(c);
