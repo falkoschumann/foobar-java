@@ -31,6 +31,11 @@ ext {
 
 tasks.register<RunSQL>("createSchema") {
   group = "database"
+  println("databaseUser: " + ext["databaseUser"])
+  println("databasePassword: " + ext["databasePassword"])
+  println("databaseHost: " + ext["databaseHost"])
+  println("databasePort: " + ext["databasePort"])
+  println("databaseName: " + ext["databaseName"])
   config {
     username = ext["databaseUser"] as String
     password = ext["databasePassword"] as String
