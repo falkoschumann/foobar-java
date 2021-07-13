@@ -16,7 +16,7 @@ import com.acme.helloworld.backend.adapters.SqlUserRepository;
 import com.acme.helloworld.contract.messages.commands.CreateUserCommand;
 import com.acme.helloworld.contract.messages.commands.Success;
 import javax.sql.DataSource;
-import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -57,8 +57,8 @@ class CreateUserCommandHandlerTests {
     assertEquals("Bob", user.name());
   }
 
-  @AfterAll
-  static void tearDown() throws Exception {
+  @AfterEach
+  void tearDown() throws Exception {
     var sql = """
       DELETE FROM users
       WHERE name = 'Bob'

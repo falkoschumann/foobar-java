@@ -29,7 +29,7 @@ ext {
   }
 }
 
-task<RunSQL>("createSchema") {
+tasks.register<RunSQL>("createSchema") {
   group = "database"
   config {
     username = ext["databaseUser"] as String
@@ -41,7 +41,7 @@ task<RunSQL>("createSchema") {
   }
 }
 
-task<RunSQL>("insertTestdata") {
+tasks.register<RunSQL>("insertTestdata") {
   group = "database"
   config {
     username = ext["databaseUser"] as String
@@ -53,7 +53,7 @@ task<RunSQL>("insertTestdata") {
   }
 }
 
-task<RunSQL>("deleteTestdata") {
+tasks.register<RunSQL>("deleteTestdata") {
   group = "database"
   config {
     username = ext["databaseUser"] as String
