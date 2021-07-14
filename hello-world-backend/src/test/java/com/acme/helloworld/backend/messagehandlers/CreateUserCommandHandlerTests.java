@@ -8,6 +8,7 @@ package com.acme.helloworld.backend.messagehandlers;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.any;
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.acme.helloworld.backend.adapters.MemoryUserRepository;
@@ -31,10 +32,10 @@ class CreateUserCommandHandlerTests {
 
     var status = handler.handle(new CreateUserCommand("Bob"));
 
-    assertEquals(new Success(), status);
-    var user = repository.findAll().get(1);
-    assertThat(user.id(), is(any(String.class)));
-    assertEquals("Bob", user.name());
+    assertAll(
+        () -> assertEquals(new Success(), status),
+        () -> assertThat(repository.findAll().get(1).id(), is(any(String.class))),
+        () -> assertEquals("Bob", repository.findAll().get(1).name()));
   }
 
   @Nested
@@ -54,10 +55,10 @@ class CreateUserCommandHandlerTests {
 
       var status = handler.handle(new CreateUserCommand("Bob"));
 
-      assertEquals(new Success(), status);
-      var user = repository.findAll().get(1);
-      assertThat(user.id(), is(any(String.class)));
-      assertEquals("Bob", user.name());
+      assertAll(
+          () -> assertEquals(new Success(), status),
+          () -> assertThat(repository.findAll().get(1).id(), is(any(String.class))),
+          () -> assertEquals("Bob", repository.findAll().get(1).name()));
     }
 
     @AfterEach

@@ -5,6 +5,7 @@
 
 package com.acme.helloworld.backend.messagehandlers;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.acme.helloworld.backend.PreferencesRepository.WindowBounds;
@@ -22,7 +23,8 @@ class ChangeWindowBoundsCommandHandlerTests {
 
     var status = handler.handle(new ChangeWindowBoundsCommand(1, 2, 3, 4));
 
-    assertEquals(new Success(), status);
-    assertEquals(new WindowBounds(1, 2, 3, 4), repository.loadWindowBounds());
+    assertAll(
+        () -> assertEquals(new Success(), status),
+        () -> assertEquals(new WindowBounds(1, 2, 3, 4), repository.loadWindowBounds()));
   }
 }

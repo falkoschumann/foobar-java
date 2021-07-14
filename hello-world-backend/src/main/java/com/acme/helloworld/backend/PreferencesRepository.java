@@ -5,7 +5,13 @@
 
 package com.acme.helloworld.backend;
 
+import com.acme.helloworld.contract.data.Preferences;
+
 public interface PreferencesRepository {
+  Preferences loadPreferences();
+
+  void storePreferences(Preferences preferences);
+
   WindowBounds loadWindowBounds();
 
   void storeWindowBounds(WindowBounds bounds);

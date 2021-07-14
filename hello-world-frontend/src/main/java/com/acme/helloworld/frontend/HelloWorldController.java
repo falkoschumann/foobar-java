@@ -104,6 +104,12 @@ public class HelloWorldController {
   }
 
   @FXML
+  private void handleShowPreferences() {
+    var controller = PreferencesController.create(stage);
+    controller.run();
+  }
+
+  @FXML
   private void handleClose() {
     stage.close();
   }
