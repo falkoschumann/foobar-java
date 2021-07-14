@@ -64,3 +64,19 @@ tasks.register<RunSQL>("deleteTestdata") {
     scriptFile = "src/test/sql/delete-testdata.sql"
   }
 }
+
+tasks.test {
+  useJUnitPlatform {
+    excludeTags("sql")
+  }
+}
+
+val testSql = tasks.register<Test>("testSql") {
+  group = "verification"
+  shouldRunAfter("test")
+  useJUnitPlatform {
+    includeTags("sql")
+  }
+}
+
+tasks.check { dependsOn(testSql) }

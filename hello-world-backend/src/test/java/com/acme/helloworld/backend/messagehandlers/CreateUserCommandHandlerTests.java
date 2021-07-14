@@ -18,18 +18,13 @@ import com.acme.helloworld.contract.messages.commands.Success;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 class CreateUserCommandHandlerTests {
-  private static DataSource dataSource;
-
-  @BeforeAll
-  static void initAll() {
-    dataSource = TestDataSourceFactory.createDataSource();
-  }
-
   @Test
-  void handleSuccessfully_Memory() {
+  void testHandle() {
     var repository = new MemoryUserRepository();
     repository.addExamples();
     var handler = new CreateUserCommandHandler(repository);
@@ -42,28 +37,39 @@ class CreateUserCommandHandlerTests {
     assertEquals("Bob", user.name());
   }
 
-  @Test
-  void handleSuccessfully_Database() {
-    var repository = new SqlUserRepository(dataSource);
-    var handler = new CreateUserCommandHandler(repository);
+  @Nested
+  @Tag("sql")
+  class Database {
+    private static DataSource dataSource;
 
-    var status = handler.handle(new CreateUserCommand("Bob"));
+    @BeforeAll
+    static void initAll() {
+      dataSource = TestDataSourceFactory.createDataSource();
+    }
 
-    assertEquals(new Success(), status);
-    var user = repository.findAll().get(1);
-    assertThat(user.id(), is(any(String.class)));
-    assertEquals("Bob", user.name());
-  }
+    @Test
+    void testHandle() {
+      var repository = new SqlUserRepository(dataSource);
+      var handler = new CreateUserCommandHandler(repository);
 
-  @AfterEach
-  void tearDown() throws Exception {
-    var sql = """
+      var status = handler.handle(new CreateUserCommand("Bob"));
+
+      assertEquals(new Success(), status);
+      var user = repository.findAll().get(1);
+      assertThat(user.id(), is(any(String.class)));
+      assertEquals("Bob", user.name());
+    }
+
+    @AfterEach
+    void tearDown() throws Exception {
+      var sql = """
       DELETE FROM users
       WHERE name = 'Bob'
       """;
-    try (var connection = dataSource.getConnection()) {
-      try (var statement = connection.prepareStatement(sql)) {
-        statement.executeUpdate();
+      try (var connection = dataSource.getConnection()) {
+        try (var statement = connection.prepareStatement(sql)) {
+          statement.executeUpdate();
+        }
       }
     }
   }

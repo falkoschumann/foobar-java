@@ -16,18 +16,13 @@ import com.acme.helloworld.contract.messages.queries.UsersQueryResult;
 import java.util.List;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 class UserQueryHandlerTests {
-  private static DataSource dataSource;
-
-  @BeforeAll
-  static void initAll() {
-    dataSource = TestDataSourceFactory.createDataSource();
-  }
-
   @Test
-  void handle_Memory() {
+  void testHandle() {
     var repository = new MemoryUserRepository();
     repository.addExamples();
     var handler = new UsersQueryHandler(repository);
@@ -39,15 +34,26 @@ class UserQueryHandlerTests {
         result);
   }
 
-  @Test
-  void handle_Database() {
-    var repository = new SqlUserRepository(dataSource);
-    var handler = new UsersQueryHandler(repository);
+  @Nested
+  @Tag("sql")
+  class Database {
+    private static DataSource dataSource;
 
-    var result = handler.handle(new UsersQuery());
+    @BeforeAll
+    static void initAll() {
+      dataSource = TestDataSourceFactory.createDataSource();
+    }
 
-    assertEquals(
-        new UsersQueryResult(List.of(new User("0dc31588-bda7-4987-adc5-ad4413fc3e54", "Alice"))),
-        result);
+    @Test
+    void testHandle() {
+      var repository = new SqlUserRepository(dataSource);
+      var handler = new UsersQueryHandler(repository);
+
+      var result = handler.handle(new UsersQuery());
+
+      assertEquals(
+          new UsersQueryResult(List.of(new User("0dc31588-bda7-4987-adc5-ad4413fc3e54", "Alice"))),
+          result);
+    }
   }
 }

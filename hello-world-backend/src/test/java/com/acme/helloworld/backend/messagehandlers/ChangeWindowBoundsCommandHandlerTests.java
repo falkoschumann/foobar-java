@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 
 class ChangeWindowBoundsCommandHandlerTests {
   @Test
-  void handle_Memory() {
+  void testHandle() {
     var repository = new MemoryPreferencesRepository();
     repository.addExamples();
     var handler = new ChangeWindowBoundsCommandHandler(repository);

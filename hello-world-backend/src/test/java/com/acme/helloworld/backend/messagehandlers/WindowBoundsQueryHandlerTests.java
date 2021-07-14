@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 
 class WindowBoundsQueryHandlerTests {
   @Test
-  void handleSuccessfully_Memory() {
+  void testHandle() {
     var repository = new MemoryPreferencesRepository();
     repository.addExamples();
     var handler = new WindowBoundsQueryHandler(repository);

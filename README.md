@@ -27,6 +27,8 @@ TODO: Usage
 
 - Der Code Style [Google Java Style Guide][1] wird beim Build geprüft.
 - Code formatieren: `./gradlew spotlessApply`
+- Build: `.gradlew clean build`
+- Build ohne SQL-Tests: `.gradlew clean build -x testSql`
 - Release erstellen: `./gradlew jpackage`
 - [Project Lombok][2] wird verwendet, um Boilerplate Code zu reduzieren, es
   werden nur stabile Features verwendet, zum Beispiel: `@Getter` oder `@Setter`.
@@ -50,4 +52,5 @@ und `{RequestUUID}` passend ersetzt werden.
    `xcrun stapler staple hello-world/build/jpackage/hello-world-1.0.0.dmg`
 
 [1]: https://google.github.io/styleguide/javaguide.html
+
 [2]: https://projectlombok.org
