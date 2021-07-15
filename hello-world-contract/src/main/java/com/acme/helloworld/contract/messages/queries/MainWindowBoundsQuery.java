@@ -5,6 +5,4 @@
 
 package com.acme.helloworld.contract.messages.queries;
 
-import com.acme.helloworld.contract.data.DatabaseConnection;
-
-public record DatabaseConnectionQueryResult(DatabaseConnection connection) {}
+public record MainWindowBoundsQuery() {}

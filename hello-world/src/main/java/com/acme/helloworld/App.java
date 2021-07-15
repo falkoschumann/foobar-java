@@ -12,10 +12,13 @@ import com.acme.helloworld.backend.adapters.JavaPreferencesRepository;
 import com.acme.helloworld.backend.adapters.MemoryPreferencesRepository;
 import com.acme.helloworld.backend.adapters.MemoryUserRepository;
 import com.acme.helloworld.backend.adapters.SqlUserRepository;
-import com.acme.helloworld.backend.messagehandlers.ChangeWindowBoundsCommandHandler;
+import com.acme.helloworld.backend.messagehandlers.ChangeMainWindowBoundsCommandHandler;
+import com.acme.helloworld.backend.messagehandlers.ChangePreferencesCommandHandler;
 import com.acme.helloworld.backend.messagehandlers.CreateUserCommandHandler;
+import com.acme.helloworld.backend.messagehandlers.;
+import com.acme.helloworld.backend.messagehandlers.PreferencesQueryHandler;
 import com.acme.helloworld.backend.messagehandlers.UsersQueryHandler;
-import com.acme.helloworld.backend.messagehandlers.WindowBoundsQueryHandler;
+import com.acme.helloworld.contract.messages.queries.PreferencesQuery;
 import com.acme.helloworld.contract.messages.queries.UsersQuery;
 import com.acme.helloworld.frontend.HelloWorldController;
 import javafx.application.Application;
@@ -45,28 +48,44 @@ public class App extends Application {
 
   @Override
   public void start(Stage primaryStage) {
+    var changeMainWindowBoundsCommandHandler =
+        new ChangeMainWindowBoundsCommandHandler(preferencesRepository);
+    var changePreferencesCommandHandler =
+        new ChangePreferencesCommandHandler(preferencesRepository);
     var createUserCommandHandler = new CreateUserCommandHandler(userRepository);
-    var changeWindowBoundsCommandHandler =
-        new ChangeWindowBoundsCommandHandler(preferencesRepository);
+    var testDatabaseConnectionCommandHandler = new TestDatabaseConnectionCommandHandler();
+    var mainWindowBoundsQueryHandler = new MainWindowBoundsQueryHandler(preferencesRepository);
+    var preferencesQueryHandler = new PreferencesQueryHandler(preferencesRepository);
     var usersQueryHandler = new UsersQueryHandler(userRepository);
-    var windowBoundsQueryHandler = new WindowBoundsQueryHandler(preferencesRepository);
     var frontend = HelloWorldController.create(primaryStage);
 
+    frontend.setOnChangeMainWindowBoundsCommand(changeMainWindowBoundsCommandHandler::handle);
+    frontend.setOnChangePreferencesCommand(
+        command -> {
+          changePreferencesCommandHandler.handle(command);
+          var result = preferencesQueryHandler.handle(new PreferencesQuery());
+          frontend.display(result);
+        });
     frontend.setOnCreateUserCommand(
-        c -> {
-          createUserCommandHandler.handle(c);
+        command -> {
+          createUserCommandHandler.handle(command);
           var result = usersQueryHandler.handle(new UsersQuery());
           frontend.display(result);
         });
-    frontend.setOnChangeWindowBoundsCommand(changeWindowBoundsCommandHandler::handle);
-    frontend.setOnUsersQuery(
-        q -> {
-          var result = usersQueryHandler.handle(q);
+    frontend.setOnTestDatabaseConnectionCommand(testDatabaseConnectionCommandHandler::handle);
+    frontend.setOnMainWindowBoundsQuery(
+        query -> {
+          var result = mainWindowBoundsQueryHandler.handle(query);
           frontend.display(result);
         });
-    frontend.setOnWindowBoundsQuery(
-        q -> {
-          var result = windowBoundsQueryHandler.handle(q);
+    frontend.setOnPreferencesQuery(
+        query -> {
+          var result = preferencesQueryHandler.handle(query);
+          frontend.display(result);
+        });
+    frontend.setOnUsersQuery(
+        query -> {
+          var result = usersQueryHandler.handle(query);
           frontend.display(result);
         });
 

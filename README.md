@@ -25,11 +25,11 @@ TODO: Usage
 
 ## Contributing
 
-- Der Code Style [Google Java Style Guide][1] wird beim Build geprüft.
-- Code formatieren: `./gradlew spotlessApply`
-- Build: `.gradlew clean build`
-- Build ohne SQL-Tests: `.gradlew clean build -x testSql`
-- Release erstellen: `./gradlew jpackage`
+- Build mit `.gradlew clean build`; alternativ ohne SQL-Tests mit
+  `.gradlew clean build -x testSql`
+- Release erstellen mit `./gradlew jpackage`
+- Code Style [Google Java Style Guide][1] wird beim Build geprüft und
+  mit `./gradlew spotlessApply` formatiert
 - [Project Lombok][2] wird verwendet, um Boilerplate Code zu reduzieren, es
   werden nur stabile Features verwendet, zum Beispiel: `@Getter` oder `@Setter`.
 

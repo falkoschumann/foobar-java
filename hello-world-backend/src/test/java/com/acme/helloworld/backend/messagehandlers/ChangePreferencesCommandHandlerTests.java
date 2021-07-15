@@ -31,6 +31,6 @@ class ChangePreferencesCommandHandlerTests {
         () ->
             assertEquals(
                 new DatabaseConnection(false, "postgres", 5432, "acme", "acme", "acme"),
-                repository.loadPreferences().databaseConnection()));
+                repository.loadDatabaseConnection()));
   }
 }

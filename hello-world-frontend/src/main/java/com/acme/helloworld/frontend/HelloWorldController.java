@@ -5,12 +5,16 @@
 
 package com.acme.helloworld.frontend;
 
-import com.acme.helloworld.contract.messages.commands.ChangeWindowBoundsCommand;
+import com.acme.helloworld.contract.data.WindowBounds;
+import com.acme.helloworld.contract.messages.commands.ChangeMainWindowBoundsCommand;
+import com.acme.helloworld.contract.messages.commands.ChangePreferencesCommand;
 import com.acme.helloworld.contract.messages.commands.CreateUserCommand;
+import com.acme.helloworld.contract.messages.commands.TestDatabaseConnectionCommand;
+import com.acme.helloworld.contract.messages.queries.PreferencesQuery;
 import com.acme.helloworld.contract.messages.queries.UsersQuery;
 import com.acme.helloworld.contract.messages.queries.UsersQueryResult;
-import com.acme.helloworld.contract.messages.queries.WindowBoundsQuery;
-import com.acme.helloworld.contract.messages.queries.WindowBoundsQueryResult;
+import com.acme.helloworld.contract.messages.queries.MainWindowBoundsQuery;
+import com.acme.helloworld.contract.messages.queries.MainWindowBoundsQueryResult;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.ResourceBundle;
@@ -26,10 +30,13 @@ import lombok.Getter;
 import lombok.Setter;
 
 public class HelloWorldController {
+  @Getter @Setter private Consumer<ChangeMainWindowBoundsCommand> onChangeMainWindowBoundsCommand;
+  @Getter @Setter private Consumer<ChangePreferencesCommand> onChangePreferencesCommand;
   @Getter @Setter private Consumer<CreateUserCommand> onCreateUserCommand;
-  @Getter @Setter private Consumer<ChangeWindowBoundsCommand> onChangeWindowBoundsCommand;
+  @Getter @Setter private Consumer  <TestDatabaseConnectionCommand> onTestDatabaseConnectionCommand;
+  @Getter @Setter private Consumer<MainWindowBoundsQuery> onMainWindowBoundsQuery;
+  @Getter @Setter private Consumer<PreferencesQuery> onPreferencesQuery;
   @Getter @Setter private Consumer<UsersQuery> onUsersQuery;
-  @Getter @Setter private Consumer<WindowBoundsQuery> onWindowBoundsQuery;
 
   @FXML private Stage stage;
   @FXML private MenuBar menuBar;
@@ -53,7 +60,7 @@ public class HelloWorldController {
 
   public void run() {
     onUsersQuery.accept(new UsersQuery());
-    onWindowBoundsQuery.accept(new WindowBoundsQuery());
+    onMainWindowBoundsQuery.accept(new MainWindowBoundsQuery());
     stage.show();
   }
 
@@ -61,8 +68,8 @@ public class HelloWorldController {
     model.setUsers(result.users());
   }
 
-  public void display(WindowBoundsQueryResult result) {
-    if (result.isNull()) {
+  public void display(MainWindowBoundsQueryResult result) {
+    if (WindowBounds.NULL.equals(result.windowBounds())) {
       return;
     }
 
@@ -98,8 +105,8 @@ public class HelloWorldController {
   }
 
   private void windowBoundsChanged() {
-    onChangeWindowBoundsCommand.accept(
-        new ChangeWindowBoundsCommand(
+    onChangeMainWindowBoundsCommand.accept(
+        new ChangeMainWindowBoundsCommand(
             stage.getX(), stage.getY(), stage.getWidth(), stage.getHeight()));
   }
 

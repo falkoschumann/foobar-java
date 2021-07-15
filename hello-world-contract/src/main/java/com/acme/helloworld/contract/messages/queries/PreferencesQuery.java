@@ -5,4 +5,4 @@
 
 package com.acme.helloworld.contract.messages.queries;
 
-public record DatabaseConnectionQuery() {}
+public record PreferencesQuery() {}

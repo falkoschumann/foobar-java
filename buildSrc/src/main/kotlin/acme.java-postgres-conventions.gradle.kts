@@ -37,7 +37,7 @@ tasks.register<RunSQL>("createSchema") {
     url =
       "jdbc:postgresql://" + ext["databaseHost"] + ":" + ext["databasePort"] + "/" + ext["databaseName"]
     driverClassName = "org.postgresql.Driver"
-    scriptFile = "src/test/sql/schema.sql"
+    scriptFile = "src/main/sql/schema.sql"
   }
 }
 
@@ -79,4 +79,6 @@ val testSql = tasks.register<Test>("testSql") {
   }
 }
 
-tasks.check { dependsOn(testSql) }
+tasks.check {
+  dependsOn(testSql)
+}

@@ -33,3 +33,11 @@
 .caption {
   -fx-font-size: 12px;
 }
+
+.success {
+  -fx-text-fill: green;
+}
+
+.failure {
+  -fx-text-fill: tomato;
+}

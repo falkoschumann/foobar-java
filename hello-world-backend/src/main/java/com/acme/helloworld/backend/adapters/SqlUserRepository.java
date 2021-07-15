@@ -25,7 +25,6 @@ public class SqlUserRepository implements UserRepository {
     var sql = """
       SELECT id, name
       FROM users
-      ORDER BY name
       """;
     try (var connection = dataSource.getConnection()) {
       try (var statement = connection.prepareStatement(sql)) {

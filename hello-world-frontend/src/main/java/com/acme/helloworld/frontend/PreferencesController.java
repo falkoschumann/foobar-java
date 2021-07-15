@@ -11,6 +11,8 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.TextField;
 import javafx.stage.Modality;
@@ -24,8 +26,9 @@ public class PreferencesController {
   @FXML private TextField host;
   @FXML private Spinner<Integer> port;
   @FXML private TextField user;
-  @FXML private TextField password;
+  @FXML private PasswordField password;
   @FXML private TextField database;
+  @FXML private Label testConnectionMessage;
 
   private PreferencesModel model;
 
@@ -49,6 +52,8 @@ public class PreferencesController {
   @FXML
   private void initialized() {
     model = new PreferencesModel();
+
+    Stages.setDefaultDialogBehavior(stage);
   }
 
   public void run() {

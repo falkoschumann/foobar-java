@@ -7,7 +7,7 @@ package com.acme.helloworld.backend.adapters;
 
 import com.acme.helloworld.backend.PreferencesRepository;
 import com.acme.helloworld.contract.data.DatabaseConnection;
-import com.acme.helloworld.contract.data.Preferences;
+import com.acme.helloworld.contract.data.WindowBounds;
 
 public class JavaPreferencesRepository implements PreferencesRepository {
   private static final String APP_NODE = "/com/acme/helloworld";
@@ -26,26 +26,24 @@ public class JavaPreferencesRepository implements PreferencesRepository {
       java.util.prefs.Preferences.userRoot().node(APP_NODE);
 
   @Override
-  public Preferences loadPreferences() {
+  public DatabaseConnection loadDatabaseConnection() {
     var useDefaults = preferences.getBoolean(DATABASE_USE_DEFAULTS, true);
     var host = preferences.get(DATABASE_HOST, "");
     var port = preferences.getInt(DATABASE_PORT, 0);
     var user = preferences.get(DATABASE_USER, "");
     var password = preferences.get(DATABASE_PASSWORD, "");
     var database = preferences.get(DATABASE_DATABASE, "");
-    return new Preferences(
-        new DatabaseConnection(useDefaults, host, port, user, password, database));
+    return         new DatabaseConnection(useDefaults, host, port, user, password, database);
   }
 
   @Override
-  public void storePreferences(Preferences preferences) {
-    this.preferences.putBoolean(
-        DATABASE_USE_DEFAULTS, preferences.databaseConnection().useDefaults());
-    this.preferences.put(DATABASE_HOST, preferences.databaseConnection().host());
-    this.preferences.putInt(DATABASE_PORT, preferences.databaseConnection().port());
-    this.preferences.put(DATABASE_USER, preferences.databaseConnection().user());
-    this.preferences.put(DATABASE_PASSWORD, preferences.databaseConnection().password());
-    this.preferences.put(DATABASE_DATABASE, preferences.databaseConnection().database());
+  public void storeDatabaseConnection(DatabaseConnection databaseConnection) {
+    this.preferences.putBoolean(DATABASE_USE_DEFAULTS, databaseConnection.useDefaults());
+    this.preferences.put(DATABASE_HOST, databaseConnection.host());
+    this.preferences.putInt(DATABASE_PORT, databaseConnection.port());
+    this.preferences.put(DATABASE_USER, databaseConnection.user());
+    this.preferences.put(DATABASE_PASSWORD, databaseConnection.password());
+    this.preferences.put(DATABASE_DATABASE, databaseConnection.database());
   }
 
   @Override
@@ -58,10 +56,10 @@ public class JavaPreferencesRepository implements PreferencesRepository {
   }
 
   @Override
-  public void storeWindowBounds(WindowBounds bounds) {
-    preferences.putDouble(WINDOW_BOUNDS_X, bounds.x());
-    preferences.putDouble(WINDOW_BOUNDS_Y, bounds.y());
-    preferences.putDouble(WINDOW_BOUNDS_WIDTH, bounds.width());
-    preferences.putDouble(WINDOW_BOUNDS_HEIGHT, bounds.height());
+  public void storeWindowBounds(WindowBounds windowBounds) {
+    preferences.putDouble(WINDOW_BOUNDS_X, windowBounds.x());
+    preferences.putDouble(WINDOW_BOUNDS_Y, windowBounds.y());
+    preferences.putDouble(WINDOW_BOUNDS_WIDTH, windowBounds.width());
+    preferences.putDouble(WINDOW_BOUNDS_HEIGHT, windowBounds.height());
   }
 }

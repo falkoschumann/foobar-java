@@ -6,7 +6,6 @@
 package com.acme.helloworld.backend.messagehandlers;
 
 import com.acme.helloworld.backend.PreferencesRepository;
-import com.acme.helloworld.contract.data.Preferences;
 import com.acme.helloworld.contract.messages.commands.ChangePreferencesCommand;
 import com.acme.helloworld.contract.messages.commands.CommandStatus;
 import com.acme.helloworld.contract.messages.commands.Success;
@@ -19,7 +18,7 @@ public class ChangePreferencesCommandHandler {
   }
 
   public CommandStatus handle(ChangePreferencesCommand command) {
-    repository.storePreferences(new Preferences(command.databaseConnection()));
+    repository.storeDatabaseConnection(command.databaseConnection());
     return new Success();
   }
 }

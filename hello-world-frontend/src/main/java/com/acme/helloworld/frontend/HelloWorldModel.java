@@ -25,30 +25,18 @@ class HelloWorldModel {
           }
 
           var last = value.get(value.size() - 1);
-          setNewestUser(last);
+          newestUser.set(last);
         }
       };
 
-  final List<User> getUsers() {
-    return users.get();
-  }
-
   final void setUsers(List<User> users) {
     this.users.set(users);
-  }
-
-  final ObjectProperty<List<User>> usersProperty() {
-    return users;
   }
 
   private final ObjectProperty<User> newestUser = new SimpleObjectProperty<>();
 
   final User getNewestUser() {
     return newestUser.get();
-  }
-
-  final void setNewestUser(User newestUser) {
-    this.newestUser.set(newestUser);
   }
 
   final ObjectProperty<User> newestUserProperty() {
