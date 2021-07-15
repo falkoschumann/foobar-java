@@ -33,7 +33,7 @@ public class JavaPreferencesRepository implements PreferencesRepository {
     var user = preferences.get(DATABASE_USER, "");
     var password = preferences.get(DATABASE_PASSWORD, "");
     var database = preferences.get(DATABASE_DATABASE, "");
-    return         new DatabaseConnection(useDefaults, host, port, user, password, database);
+    return new DatabaseConnection(useDefaults, host, port, user, password, database);
   }
 
   @Override

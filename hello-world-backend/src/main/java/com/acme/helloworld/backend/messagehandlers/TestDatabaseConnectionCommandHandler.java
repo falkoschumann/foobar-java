@@ -1,3 +1,8 @@
+/*
+ * Hello World - Backend
+ * Copyright (c) 2021 ACME Ltd. <contact@acme.com>
+ */
+
 package com.acme.helloworld.backend.messagehandlers;
 
 import com.acme.helloworld.backend.adapters.DataSourceFactory;

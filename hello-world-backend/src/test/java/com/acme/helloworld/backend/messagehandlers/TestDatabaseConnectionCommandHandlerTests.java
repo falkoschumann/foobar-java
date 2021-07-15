@@ -1,3 +1,8 @@
+/*
+ * Hello World - Backend
+ * Copyright (c) 2021 ACME Ltd. <contact@acme.com>
+ */
+
 package com.acme.helloworld.backend.messagehandlers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

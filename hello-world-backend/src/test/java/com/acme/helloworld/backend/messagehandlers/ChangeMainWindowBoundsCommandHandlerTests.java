@@ -8,8 +8,8 @@ package com.acme.helloworld.backend.messagehandlers;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.acme.helloworld.contract.data.WindowBounds;
 import com.acme.helloworld.backend.adapters.MemoryPreferencesRepository;
+import com.acme.helloworld.contract.data.WindowBounds;
 import com.acme.helloworld.contract.messages.commands.ChangeMainWindowBoundsCommand;
 import com.acme.helloworld.contract.messages.commands.Success;
 import org.junit.jupiter.api.Test;

@@ -10,11 +10,14 @@ import com.acme.helloworld.contract.messages.commands.ChangeMainWindowBoundsComm
 import com.acme.helloworld.contract.messages.commands.ChangePreferencesCommand;
 import com.acme.helloworld.contract.messages.commands.CreateUserCommand;
 import com.acme.helloworld.contract.messages.commands.TestDatabaseConnectionCommand;
-import com.acme.helloworld.contract.messages.queries.PreferencesQuery;
-import com.acme.helloworld.contract.messages.queries.UsersQuery;
-import com.acme.helloworld.contract.messages.queries.UsersQueryResult;
+import com.acme.helloworld.contract.messages.notifications.DatabaseConnectionFaultyNotification;
+import com.acme.helloworld.contract.messages.notifications.DatabaseConnectionSuccessfulNotification;
 import com.acme.helloworld.contract.messages.queries.MainWindowBoundsQuery;
 import com.acme.helloworld.contract.messages.queries.MainWindowBoundsQueryResult;
+import com.acme.helloworld.contract.messages.queries.PreferencesQuery;
+import com.acme.helloworld.contract.messages.queries.PreferencesQueryResult;
+import com.acme.helloworld.contract.messages.queries.UsersQuery;
+import com.acme.helloworld.contract.messages.queries.UsersQueryResult;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.ResourceBundle;
@@ -33,7 +36,7 @@ public class HelloWorldController {
   @Getter @Setter private Consumer<ChangeMainWindowBoundsCommand> onChangeMainWindowBoundsCommand;
   @Getter @Setter private Consumer<ChangePreferencesCommand> onChangePreferencesCommand;
   @Getter @Setter private Consumer<CreateUserCommand> onCreateUserCommand;
-  @Getter @Setter private Consumer  <TestDatabaseConnectionCommand> onTestDatabaseConnectionCommand;
+  @Getter @Setter private Consumer<TestDatabaseConnectionCommand> onTestDatabaseConnectionCommand;
   @Getter @Setter private Consumer<MainWindowBoundsQuery> onMainWindowBoundsQuery;
   @Getter @Setter private Consumer<PreferencesQuery> onPreferencesQuery;
   @Getter @Setter private Consumer<UsersQuery> onUsersQuery;
@@ -64,19 +67,15 @@ public class HelloWorldController {
     stage.show();
   }
 
-  public void display(UsersQueryResult result) {
-    model.setUsers(result.users());
-  }
-
   public void display(MainWindowBoundsQueryResult result) {
     if (WindowBounds.NULL.equals(result.windowBounds())) {
       return;
     }
 
-    var x = result.x();
-    var y = result.y();
-    var width = result.width();
-    var height = result.height();
+    var x = result.windowBounds().x();
+    var y = result.windowBounds().y();
+    var width = result.windowBounds().width();
+    var height = result.windowBounds().height();
 
     if (Screen.getScreensForRectangle(x, y, width, height).isEmpty()) {
       return;
@@ -86,6 +85,22 @@ public class HelloWorldController {
     stage.setY(y);
     stage.setWidth(width);
     stage.setHeight(height);
+  }
+
+  public void display(PreferencesQueryResult result) {
+    // TODO display(PreferencesQueryResult)
+  }
+
+  public void display(UsersQueryResult result) {
+    model.setUsers(result.users());
+  }
+
+  public void display(DatabaseConnectionFaultyNotification notification) {
+    // TODO display(DatabaseConnectionFaultyNotification)
+  }
+
+  public void display(DatabaseConnectionSuccessfulNotification notification) {
+    // TODO display(DatabaseConnectionSuccessfulNotification)
   }
 
   @FXML
@@ -107,7 +122,7 @@ public class HelloWorldController {
   private void windowBoundsChanged() {
     onChangeMainWindowBoundsCommand.accept(
         new ChangeMainWindowBoundsCommand(
-            stage.getX(), stage.getY(), stage.getWidth(), stage.getHeight()));
+            new WindowBounds(stage.getX(), stage.getY(), stage.getWidth(), stage.getHeight())));
   }
 
   @FXML

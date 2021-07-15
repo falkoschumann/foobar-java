@@ -6,10 +6,17 @@
 package com.acme.helloworld.backend.messagehandlers;
 
 import com.acme.helloworld.backend.UserRepository;
+import com.acme.helloworld.contract.messages.notifications.DatabaseConnectionFaultyNotification;
 import com.acme.helloworld.contract.messages.queries.UsersQuery;
 import com.acme.helloworld.contract.messages.queries.UsersQueryResult;
+import java.util.function.Consumer;
+import lombok.Getter;
+import lombok.Setter;
 
 public class UsersQueryHandler {
+  @Getter @Setter
+  private Consumer<DatabaseConnectionFaultyNotification> onDatabaseConnectionFaultyNotification;
+
   private final UserRepository repository;
 
   public UsersQueryHandler(UserRepository repository) {
@@ -20,7 +27,9 @@ public class UsersQueryHandler {
     try {
       var users = repository.findAll();
       return new UsersQueryResult(users);
-    } catch (Exception e) {
+    } catch (RuntimeException e) {
+      onDatabaseConnectionFaultyNotification.accept(
+          new DatabaseConnectionFaultyNotification(e.getLocalizedMessage()));
       return new UsersQueryResult(null);
     }
   }

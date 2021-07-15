@@ -9,7 +9,7 @@ import com.acme.helloworld.contract.data.DatabaseConnection;
 import java.util.Objects;
 
 public record PreferencesQueryResult(DatabaseConnection databaseConnection) {
-  public PreferencesQueryResult{
+  public PreferencesQueryResult {
     Objects.requireNonNull(databaseConnection, "databaseConnection");
   }
 }

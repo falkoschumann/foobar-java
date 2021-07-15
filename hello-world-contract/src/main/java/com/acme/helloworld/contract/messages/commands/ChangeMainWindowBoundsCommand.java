@@ -9,7 +9,7 @@ import com.acme.helloworld.contract.data.WindowBounds;
 import java.util.Objects;
 
 public record ChangeMainWindowBoundsCommand(WindowBounds windowBounds) {
-  public ChangeMainWindowBoundsCommand{
-    Objects.requireNonNull(windowBounds,"windowBounds");
+  public ChangeMainWindowBoundsCommand {
+    Objects.requireNonNull(windowBounds, "windowBounds");
   }
 }

@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Objects;
 
 public record UsersQueryResult(List<User> users) {
-  public UsersQueryResult{
-    Objects.requireNonNull(users,"users");
+  public UsersQueryResult {
+    Objects.requireNonNull(users, "users");
   }
 }

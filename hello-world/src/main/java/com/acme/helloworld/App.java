@@ -12,10 +12,10 @@ import com.acme.helloworld.backend.adapters.JavaPreferencesRepository;
 import com.acme.helloworld.backend.adapters.MemoryPreferencesRepository;
 import com.acme.helloworld.backend.adapters.MemoryUserRepository;
 import com.acme.helloworld.backend.adapters.SqlUserRepository;
+import com.acme.helloworld.backend.messagehandlers.*;
 import com.acme.helloworld.backend.messagehandlers.ChangeMainWindowBoundsCommandHandler;
 import com.acme.helloworld.backend.messagehandlers.ChangePreferencesCommandHandler;
 import com.acme.helloworld.backend.messagehandlers.CreateUserCommandHandler;
-import com.acme.helloworld.backend.messagehandlers.;
 import com.acme.helloworld.backend.messagehandlers.PreferencesQueryHandler;
 import com.acme.helloworld.backend.messagehandlers.UsersQueryHandler;
 import com.acme.helloworld.contract.messages.queries.PreferencesQuery;
@@ -59,6 +59,11 @@ public class App extends Application {
     var usersQueryHandler = new UsersQueryHandler(userRepository);
     var frontend = HelloWorldController.create(primaryStage);
 
+    testDatabaseConnectionCommandHandler.setOnDatabaseConnectionFaultyNotification(
+        frontend::display);
+    testDatabaseConnectionCommandHandler.setOnDatabaseConnectionSuccessfulNotification(
+        frontend::display);
+    usersQueryHandler.setOnDatabaseConnectionFaultyNotification(frontend::display);
     frontend.setOnChangeMainWindowBoundsCommand(changeMainWindowBoundsCommandHandler::handle);
     frontend.setOnChangePreferencesCommand(
         command -> {
