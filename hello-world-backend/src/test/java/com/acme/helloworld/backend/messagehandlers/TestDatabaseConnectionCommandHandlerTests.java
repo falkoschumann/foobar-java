@@ -10,7 +10,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.acme.helloworld.contract.messages.commands.Failure;
 import com.acme.helloworld.contract.messages.commands.Success;
-import com.acme.helloworld.contract.messages.commands.TestDatabaseConnectionCommand;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 

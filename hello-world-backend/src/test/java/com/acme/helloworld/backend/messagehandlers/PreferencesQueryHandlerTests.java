@@ -8,7 +8,6 @@ package com.acme.helloworld.backend.messagehandlers;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.acme.helloworld.backend.adapters.MemoryPreferencesRepository;
-import com.acme.helloworld.contract.data.DatabaseConnection;
 import com.acme.helloworld.contract.messages.queries.PreferencesQuery;
 import com.acme.helloworld.contract.messages.queries.PreferencesQueryResult;
 import org.junit.jupiter.api.Test;

@@ -5,12 +5,8 @@
 
 package com.acme.helloworld.backend.messagehandlers;
 
-import com.acme.helloworld.backend.adapters.DataSourceFactory;
 import com.acme.helloworld.contract.messages.commands.CommandStatus;
 import com.acme.helloworld.contract.messages.commands.Success;
-import com.acme.helloworld.contract.messages.commands.TestDatabaseConnectionCommand;
-import com.acme.helloworld.contract.messages.notifications.DatabaseConnectionFaultyNotification;
-import com.acme.helloworld.contract.messages.notifications.DatabaseConnectionSuccessfulNotification;
 import java.sql.SQLException;
 import java.util.function.Consumer;
 import lombok.Getter;

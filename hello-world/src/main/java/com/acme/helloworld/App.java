@@ -6,12 +6,8 @@
 package com.acme.helloworld;
 
 import com.acme.helloworld.backend.PreferencesRepository;
-import com.acme.helloworld.backend.UserRepository;
-import com.acme.helloworld.backend.adapters.DataSourceFactory;
 import com.acme.helloworld.backend.adapters.JavaPreferencesRepository;
 import com.acme.helloworld.backend.adapters.MemoryPreferencesRepository;
-import com.acme.helloworld.backend.adapters.MemoryUserRepository;
-import com.acme.helloworld.backend.adapters.SqlUserRepository;
 import com.acme.helloworld.backend.messagehandlers.*;
 import com.acme.helloworld.backend.messagehandlers.ChangeMainWindowBoundsCommandHandler;
 import com.acme.helloworld.backend.messagehandlers.ChangePreferencesCommandHandler;

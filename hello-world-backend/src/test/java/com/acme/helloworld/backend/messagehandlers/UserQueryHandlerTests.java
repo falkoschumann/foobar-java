@@ -7,8 +7,6 @@ package com.acme.helloworld.backend.messagehandlers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.acme.helloworld.backend.adapters.MemoryUserRepository;
-import com.acme.helloworld.backend.adapters.SqlUserRepository;
 import com.acme.helloworld.backend.adapters.TestDataSourceFactory;
 import com.acme.helloworld.contract.data.User;
 import com.acme.helloworld.contract.messages.queries.UsersQuery;

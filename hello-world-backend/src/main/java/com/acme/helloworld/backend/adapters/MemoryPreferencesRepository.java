@@ -6,36 +6,34 @@
 package com.acme.helloworld.backend.adapters;
 
 import com.acme.helloworld.backend.PreferencesRepository;
-import com.acme.helloworld.contract.data.DatabaseConnection;
-import com.acme.helloworld.contract.data.WindowBounds;
+import com.acme.helloworld.contract.data.Bounds;
 
 public class MemoryPreferencesRepository implements PreferencesRepository {
-  private DatabaseConnection databaseConnection;
-  private WindowBounds windowBounds = WindowBounds.NULL;
+  private String eventStreamFile;
+  private Bounds mainWindowBounds = Bounds.NULL;
 
   public void addExamples() {
-    databaseConnection =
-        new DatabaseConnection(true, "localhost", 5432, "acme_test", "acme_test", "acme_test");
-    windowBounds = new WindowBounds(36, 24, 640, 480);
+    eventStreamFile = "~/.hello-world/event-stream.csv";
+    mainWindowBounds = new Bounds(36, 24, 640, 480);
   }
 
   @Override
-  public DatabaseConnection loadDatabaseConnection() {
-    return databaseConnection;
+  public String loadEventStreamFile() {
+    return eventStreamFile;
   }
 
   @Override
-  public void storeDatabaseConnection(DatabaseConnection preferences) {
-    this.databaseConnection = preferences;
+  public void storeEventStreamFile(String file) {
+    eventStreamFile = file;
   }
 
   @Override
-  public WindowBounds loadWindowBounds() {
-    return windowBounds;
+  public Bounds loadMainWindowBounds() {
+    return mainWindowBounds;
   }
 
   @Override
-  public void storeWindowBounds(WindowBounds windowBounds) {
-    this.windowBounds = windowBounds;
+  public void storeMainWindowBounds(Bounds bounds) {
+    this.mainWindowBounds = bounds;
   }
 }

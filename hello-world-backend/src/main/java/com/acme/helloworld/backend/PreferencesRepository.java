@@ -5,15 +5,14 @@
 
 package com.acme.helloworld.backend;
 
-import com.acme.helloworld.contract.data.DatabaseConnection;
-import com.acme.helloworld.contract.data.WindowBounds;
+import com.acme.helloworld.contract.data.Bounds;
 
 public interface PreferencesRepository {
-  DatabaseConnection loadDatabaseConnection();
+  String loadEventStreamFile();
 
-  void storeDatabaseConnection(DatabaseConnection databaseConnection);
+  void storeEventStreamFile(String file);
 
-  WindowBounds loadWindowBounds();
+  Bounds loadMainWindowBounds();
 
-  void storeWindowBounds(WindowBounds windowBounds);
+  void storeMainWindowBounds(Bounds bounds);
 }

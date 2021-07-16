@@ -5,11 +5,10 @@
 
 package com.acme.helloworld.contract.messages.queries;
 
-import com.acme.helloworld.contract.data.DatabaseConnection;
 import java.util.Objects;
 
-public record PreferencesQueryResult(DatabaseConnection databaseConnection) {
+public record PreferencesQueryResult(String eventStreamFile) {
   public PreferencesQueryResult {
-    Objects.requireNonNull(databaseConnection, "databaseConnection");
+    Objects.requireNonNull(eventStreamFile, "eventStreamFile");
   }
 }

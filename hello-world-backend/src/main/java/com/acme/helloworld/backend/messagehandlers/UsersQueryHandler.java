@@ -5,8 +5,6 @@
 
 package com.acme.helloworld.backend.messagehandlers;
 
-import com.acme.helloworld.backend.UserRepository;
-import com.acme.helloworld.contract.messages.notifications.DatabaseConnectionFaultyNotification;
 import com.acme.helloworld.contract.messages.queries.UsersQuery;
 import com.acme.helloworld.contract.messages.queries.UsersQueryResult;
 import java.util.function.Consumer;

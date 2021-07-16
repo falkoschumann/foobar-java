@@ -5,11 +5,11 @@
 
 package com.acme.helloworld.contract.messages.commands;
 
-import com.acme.helloworld.contract.data.WindowBounds;
+import com.acme.helloworld.contract.data.Bounds;
 import java.util.Objects;
 
-public record ChangeMainWindowBoundsCommand(WindowBounds windowBounds) {
+public record ChangeMainWindowBoundsCommand(Bounds bounds) {
   public ChangeMainWindowBoundsCommand {
-    Objects.requireNonNull(windowBounds, "windowBounds");
+    Objects.requireNonNull(bounds, "bounds");
   }
 }

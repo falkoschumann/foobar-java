@@ -2,26 +2,25 @@
 
 ## Standardisiere Projektstruktur
 
-- Nutze Convention-Plugins von Gradle für Bibliotheken und Applikation sowie zur
-  Unterstützung für JavaFX und Postgres
+- Nutze Convention-Plugins für Bibliotheken und Applikation sowie zur
+  Unterstützung zusätzlicher Features wie JavaFX
 - Erzeuge Applikation als Self-Contained Application Package
-- Unterstütze Verwalten und Testen mit Postgres: Schema anlegen, Testdaten
-  importieren und löschen
-- Separiere Verantwortlichkeit für Fachlichkeit und Nutzerschnittstelle
+- Separiere Verantwortlichkeiten für Fachlichkeit (Backend) und
+  Nutzerschnittstelle (Frontend)
 - Realisiere Message-orientierte Kommunikation zwischen Backend und Frontend
+- Archiviere Events und erstelle Projektion für Darstellung von Informationen
 
 ## Stelle allgemeine Funktionen bereit
 
-- Erstelle Applikation mit Hauptfenster sowie Einstellungen-Dialog und
-  Über-Dialog
+- Erstelle Applikation mit Hauptfenster
+- Erstelle Einstellungen-Dialog
+- Erstelle Über-Dialog
 - Biete Styles zur Formatierung
-- Sichere Einstellungen mit `Preferences` oder `Properties`
-- Parametriere und verwalte Datenbankverbindung als Beispiel für Einstellungen
 - Stelle Position und Größe des Hauptfensters beim Start wieder her
-- Rechne zwischen grafischen Einheiten um: Punkt, Pixel, Millimeter und Inch
-- Mache Properties mit typisierten Getter/Setter-Methoden nutzbar
+- Ermögliche es Legacy-Bibliotheken, als Java Modules zu verwenden
 
-## Grüße Nutzer
+## Beispielfunktionen
 
-- Grüße neuesten Nutzer
 - Lege neuen Nutzer an
+- Grüße neuesten Nutzer
+- Parametriere Speicherort der Nutzerdaten

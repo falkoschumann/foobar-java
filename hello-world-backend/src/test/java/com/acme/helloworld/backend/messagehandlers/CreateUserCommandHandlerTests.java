@@ -11,8 +11,6 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.acme.helloworld.backend.adapters.MemoryUserRepository;
-import com.acme.helloworld.backend.adapters.SqlUserRepository;
 import com.acme.helloworld.backend.adapters.TestDataSourceFactory;
 import com.acme.helloworld.contract.messages.commands.CreateUserCommand;
 import com.acme.helloworld.contract.messages.commands.Success;

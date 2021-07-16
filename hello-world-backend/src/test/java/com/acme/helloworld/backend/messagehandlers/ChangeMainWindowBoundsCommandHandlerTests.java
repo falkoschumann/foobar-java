@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.acme.helloworld.backend.adapters.MemoryPreferencesRepository;
-import com.acme.helloworld.contract.data.WindowBounds;
+import com.acme.helloworld.contract.data.Bounds;
 import com.acme.helloworld.contract.messages.commands.ChangeMainWindowBoundsCommand;
 import com.acme.helloworld.contract.messages.commands.Success;
 import org.junit.jupiter.api.Test;
@@ -21,10 +21,10 @@ class ChangeMainWindowBoundsCommandHandlerTests {
     repository.addExamples();
     var handler = new ChangeMainWindowBoundsCommandHandler(repository);
 
-    var status = handler.handle(new ChangeMainWindowBoundsCommand(new WindowBounds(1, 2, 3, 4)));
+    var status = handler.handle(new ChangeMainWindowBoundsCommand(new Bounds(1, 2, 3, 4)));
 
     assertAll(
         () -> assertEquals(new Success(), status),
-        () -> assertEquals(new WindowBounds(1, 2, 3, 4), repository.loadWindowBounds()));
+        () -> assertEquals(new Bounds(1, 2, 3, 4), repository.loadWindowBounds()));
   }
 }

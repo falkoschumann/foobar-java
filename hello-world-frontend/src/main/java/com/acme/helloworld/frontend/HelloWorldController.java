@@ -5,13 +5,10 @@
 
 package com.acme.helloworld.frontend;
 
-import com.acme.helloworld.contract.data.WindowBounds;
+import com.acme.helloworld.contract.data.Bounds;
 import com.acme.helloworld.contract.messages.commands.ChangeMainWindowBoundsCommand;
 import com.acme.helloworld.contract.messages.commands.ChangePreferencesCommand;
 import com.acme.helloworld.contract.messages.commands.CreateUserCommand;
-import com.acme.helloworld.contract.messages.commands.TestDatabaseConnectionCommand;
-import com.acme.helloworld.contract.messages.notifications.DatabaseConnectionFaultyNotification;
-import com.acme.helloworld.contract.messages.notifications.DatabaseConnectionSuccessfulNotification;
 import com.acme.helloworld.contract.messages.queries.MainWindowBoundsQuery;
 import com.acme.helloworld.contract.messages.queries.MainWindowBoundsQueryResult;
 import com.acme.helloworld.contract.messages.queries.PreferencesQuery;
@@ -68,14 +65,14 @@ public class HelloWorldController {
   }
 
   public void display(MainWindowBoundsQueryResult result) {
-    if (WindowBounds.NULL.equals(result.windowBounds())) {
+    if (Bounds.NULL.equals(result.bounds())) {
       return;
     }
 
-    var x = result.windowBounds().x();
-    var y = result.windowBounds().y();
-    var width = result.windowBounds().width();
-    var height = result.windowBounds().height();
+    var x = result.bounds().x();
+    var y = result.bounds().y();
+    var width = result.bounds().width();
+    var height = result.bounds().height();
 
     if (Screen.getScreensForRectangle(x, y, width, height).isEmpty()) {
       return;
@@ -122,7 +119,7 @@ public class HelloWorldController {
   private void windowBoundsChanged() {
     onChangeMainWindowBoundsCommand.accept(
         new ChangeMainWindowBoundsCommand(
-            new WindowBounds(stage.getX(), stage.getY(), stage.getWidth(), stage.getHeight())));
+            new Bounds(stage.getX(), stage.getY(), stage.getWidth(), stage.getHeight())));
   }
 
   @FXML

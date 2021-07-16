@@ -5,7 +5,6 @@
 
 package com.acme.helloworld.backend.messagehandlers;
 
-import com.acme.helloworld.backend.UserRepository;
 import com.acme.helloworld.contract.data.User;
 import com.acme.helloworld.contract.messages.commands.CommandStatus;
 import com.acme.helloworld.contract.messages.commands.CreateUserCommand;
