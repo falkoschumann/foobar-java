@@ -12,12 +12,17 @@ import javafx.stage.Stage;
 public class Stages {
   private Stages() {}
 
-  public static void setDefaultDialogBehavior(Stage stage) {
+  public static void hookCloseHandler(Stage stage) {
+    hookCloseHandler(stage, stage::close);
+  }
+
+  public static void hookCloseHandler(Stage stage, Runnable handler) {
     stage.addEventHandler(
         KeyEvent.KEY_RELEASED,
         e -> {
-          if (e.isShiftDown() && KeyCode.W == e.getCode()) {
-            stage.hide();
+          if (e.isShortcutDown() && KeyCode.W == e.getCode()) {
+            e.consume();
+            handler.run();
           }
         });
   }

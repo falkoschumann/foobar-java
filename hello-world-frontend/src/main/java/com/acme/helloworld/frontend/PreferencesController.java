@@ -5,32 +5,26 @@
 
 package com.acme.helloworld.frontend;
 
+import com.acme.helloworld.contract.messages.commands.ChangePreferencesCommand;
+import com.acme.helloworld.contract.messages.queries.PreferencesQueryResult;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.Spinner;
 import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
+import lombok.Getter;
+import lombok.Setter;
 
 public class PreferencesController {
-  @FXML private Stage stage;
-  @FXML private CheckBox useDefaults;
-  @FXML private TextField host;
-  @FXML private Spinner<Integer> port;
-  @FXML private TextField user;
-  @FXML private PasswordField password;
-  @FXML private TextField database;
-  @FXML private Label testConnectionMessage;
+  @Getter @Setter private Consumer<ChangePreferencesCommand> onChangePreferencesCommand;
 
-  private PreferencesModel model;
+  @FXML private Stage stage;
+  @FXML private TextField greeting;
 
   public static PreferencesController create(Stage owner) {
     try {
@@ -42,7 +36,6 @@ public class PreferencesController {
       var controller = (PreferencesController) loader.getController();
       controller.stage.initModality(Modality.APPLICATION_MODAL);
       controller.stage.initOwner(owner);
-      controller.stage.initStyle(StageStyle.UTILITY);
       return controller;
     } catch (IOException e) {
       throw new UncheckedIOException(e);
@@ -50,19 +43,21 @@ public class PreferencesController {
   }
 
   @FXML
-  private void initialized() {
-    model = new PreferencesModel();
-
-    Stages.setDefaultDialogBehavior(stage);
+  private void initialize() {
+    // FIXME Ctrl-W closes main window too
+    Stages.hookCloseHandler(stage, () -> handleCloseRequest(null));
   }
 
   public void run() {
     stage.show();
   }
 
-  @FXML
-  private void handleTestConnection() {}
+  public void display(PreferencesQueryResult result) {
+    greeting.setText(result.greeting());
+  }
 
   @FXML
-  private void handleCloseRequest(WindowEvent windowEvent) {}
+  private void handleCloseRequest(WindowEvent windowEvent) {
+    onChangePreferencesCommand.accept(new ChangePreferencesCommand(greeting.getText()));
+  }
 }

@@ -34,7 +34,7 @@ public class AboutController {
 
   @FXML
   private void initialize() {
-    Stages.setDefaultDialogBehavior(stage);
+    Stages.hookCloseHandler(stage);
   }
 
   public void run() {

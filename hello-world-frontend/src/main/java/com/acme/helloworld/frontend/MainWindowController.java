@@ -9,18 +9,21 @@ import com.acme.helloworld.contract.data.Bounds;
 import com.acme.helloworld.contract.messages.commands.ChangeMainWindowBoundsCommand;
 import com.acme.helloworld.contract.messages.commands.ChangePreferencesCommand;
 import com.acme.helloworld.contract.messages.commands.CreateUserCommand;
+import com.acme.helloworld.contract.messages.notifications.UserNotCreatedNotification;
 import com.acme.helloworld.contract.messages.queries.MainWindowBoundsQuery;
 import com.acme.helloworld.contract.messages.queries.MainWindowBoundsQueryResult;
+import com.acme.helloworld.contract.messages.queries.NewestUserQuery;
+import com.acme.helloworld.contract.messages.queries.NewestUserQueryResult;
 import com.acme.helloworld.contract.messages.queries.PreferencesQuery;
 import com.acme.helloworld.contract.messages.queries.PreferencesQueryResult;
-import com.acme.helloworld.contract.messages.queries.UsersQuery;
-import com.acme.helloworld.contract.messages.queries.UsersQueryResult;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.TextField;
@@ -29,25 +32,24 @@ import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.Setter;
 
-public class HelloWorldController {
+public class MainWindowController {
   @Getter @Setter private Consumer<ChangeMainWindowBoundsCommand> onChangeMainWindowBoundsCommand;
   @Getter @Setter private Consumer<ChangePreferencesCommand> onChangePreferencesCommand;
   @Getter @Setter private Consumer<CreateUserCommand> onCreateUserCommand;
-  @Getter @Setter private Consumer<TestDatabaseConnectionCommand> onTestDatabaseConnectionCommand;
   @Getter @Setter private Consumer<MainWindowBoundsQuery> onMainWindowBoundsQuery;
   @Getter @Setter private Consumer<PreferencesQuery> onPreferencesQuery;
-  @Getter @Setter private Consumer<UsersQuery> onUsersQuery;
+  @Getter @Setter private Consumer<NewestUserQuery> onNewestUserQuery;
 
   @FXML private Stage stage;
   @FXML private MenuBar menuBar;
   @FXML private Label greeting;
   @FXML private TextField name;
 
-  private HelloWorldModel model;
+  private MainWindowModel model;
 
-  public static HelloWorldController create(Stage stage) {
+  public static MainWindowController create(Stage stage) {
     try {
-      var location = HelloWorldController.class.getResource("HelloWorldView.fxml");
+      var location = MainWindowController.class.getResource("MainWindowView.fxml");
       var resources = ResourceBundle.getBundle("HelloWorld");
       var loader = new FXMLLoader(location, resources);
       loader.setRoot(stage);
@@ -58,9 +60,21 @@ public class HelloWorldController {
     }
   }
 
+  @FXML
+  private void initialize() {
+    model = new MainWindowModel();
+    if (model.isRunningOnMac()) {
+      menuBar.setUseSystemMenuBar(true);
+    }
+
+    greeting.textProperty().bind(model.userGreetingProperty());
+    name.textProperty().bindBidirectional(model.userNameProperty());
+  }
+
   public void run() {
-    onUsersQuery.accept(new UsersQuery());
     onMainWindowBoundsQuery.accept(new MainWindowBoundsQuery());
+    onPreferencesQuery.accept(new PreferencesQuery());
+    onNewestUserQuery.accept(new NewestUserQuery());
     stage.show();
   }
 
@@ -85,36 +99,27 @@ public class HelloWorldController {
   }
 
   public void display(PreferencesQueryResult result) {
-    // TODO display(PreferencesQueryResult)
+    model.setGreeting(result.greeting());
   }
 
-  public void display(UsersQueryResult result) {
-    model.setUsers(result.users());
+  public void display(NewestUserQueryResult result) {
+    model.userAdded(result.user());
   }
 
-  public void display(DatabaseConnectionFaultyNotification notification) {
-    // TODO display(DatabaseConnectionFaultyNotification)
-  }
-
-  public void display(DatabaseConnectionSuccessfulNotification notification) {
-    // TODO display(DatabaseConnectionSuccessfulNotification)
-  }
-
-  @FXML
-  private void initialize() {
-    model = new HelloWorldModel();
-    if (model.isRunningOnMac()) {
-      menuBar.setUseSystemMenuBar(true);
-    }
-
-    model
-        .newestUserProperty()
-        .addListener(o -> greeting.setText("Hello " + model.getNewestUser().name()));
+  public void display(UserNotCreatedNotification notification) {
+    var alert = new Alert(AlertType.ERROR);
+    alert.initOwner(stage);
+    alert.setTitle("Error");
+    alert.setHeaderText("User not created");
+    alert.setContentText(notification.errorMessage());
+    alert.show();
   }
 
   @FXML
   private void handleShowPreferences() {
     var controller = PreferencesController.create(stage);
+    controller.setOnChangePreferencesCommand(onChangePreferencesCommand);
+    controller.display(new PreferencesQueryResult(model.getGreeting()));
     controller.run();
   }
 
@@ -134,6 +139,6 @@ public class HelloWorldController {
 
   @FXML
   private void handleCreateUser() {
-    onCreateUserCommand.accept(new CreateUserCommand(name.getText()));
+    onCreateUserCommand.accept(new CreateUserCommand(model.getUserName()));
   }
 }

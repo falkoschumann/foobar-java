@@ -35,9 +35,13 @@
 }
 
 .success {
-  -fx-text-fill: green;
+  -fx-text-fill: #237F52; /* RAL 6032	Signalgrün */
 }
 
 .failure {
-  -fx-text-fill: tomato;
+  -fx-text-fill: #9B2423; /* RAL 3001	Signalrot */
+}
+
+.warning {
+  -fx-text-fill: #F9A800; /* RAL 1003	Signalgelb */
 }
