@@ -5,7 +5,6 @@ plugins {
 extraJavaModuleInfo {
   module("commons-csv-1.8.jar", "org.apache.commons.csv", "1.8") {
     exports("org.apache.commons.csv")
-    // TODO Ist requiresStatic() notwendig bzw. macht es Sinn?
-    //requiresStatic("java.sql")
+    requiresStatic("java.sql")
   }
 }

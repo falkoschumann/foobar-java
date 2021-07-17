@@ -2,6 +2,7 @@ import org.apache.tools.ant.taskdefs.condition.Os
 
 plugins {
   id "acme.java-application-conventions"
+  id "acme.java-modules-conventions"
   id "acme.java-openjfx-conventions"
 }
 
