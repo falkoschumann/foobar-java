@@ -5,7 +5,6 @@
 
 package com.acme.helloworld.backend.messagehandlers;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.acme.helloworld.backend.adapters.MemoryPreferencesRepository;
@@ -20,16 +19,9 @@ class ChangePreferencesCommandHandlerTests {
     repository.addExamples();
     var handler = new ChangePreferencesCommandHandler(repository);
 
-    var status =
-        handler.handle(
-            new ChangePreferencesCommand(
-                new DatabaseConnection(false, "postgres", 5432, "acme", "acme", "acme")));
+    var status = handler.handle(new ChangePreferencesCommand("Bonjour $user"));
 
-    assertAll(
-        () -> assertEquals(new Success(), status),
-        () ->
-            assertEquals(
-                new DatabaseConnection(false, "postgres", 5432, "acme", "acme", "acme"),
-                repository.loadDatabaseConnection()));
+    assertEquals(new Success(), status);
+    assertEquals("Bonjour $user", repository.loadGreeting());
   }
 }

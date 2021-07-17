@@ -18,7 +18,7 @@ public class ChangePreferencesCommandHandler {
   }
 
   public CommandStatus handle(ChangePreferencesCommand command) {
-    repository.storeDatabaseConnection(command.databaseConnection());
+    repository.storeGreeting(command.greeting());
     return new Success();
   }
 }

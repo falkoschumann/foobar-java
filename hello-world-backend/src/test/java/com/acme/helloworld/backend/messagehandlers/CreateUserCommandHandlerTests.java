@@ -8,68 +8,42 @@ package com.acme.helloworld.backend.messagehandlers;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.any;
 import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.acme.helloworld.backend.adapters.TestDataSourceFactory;
+import com.acme.helloworld.backend.adapters.MemoryEventStore;
+import com.acme.helloworld.backend.events.UserCreatedEvent;
 import com.acme.helloworld.contract.messages.commands.CreateUserCommand;
+import com.acme.helloworld.contract.messages.commands.Failure;
 import com.acme.helloworld.contract.messages.commands.Success;
-import javax.sql.DataSource;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Tag;
+import java.time.Instant;
 import org.junit.jupiter.api.Test;
 
 class CreateUserCommandHandlerTests {
   @Test
   void testHandle() {
-    var repository = new MemoryUserRepository();
-    repository.addExamples();
-    var handler = new CreateUserCommandHandler(repository);
+    var eventStore = new MemoryEventStore();
+    eventStore.addExamples();
+    var handler = new CreateUserCommandHandler(eventStore);
 
     var status = handler.handle(new CreateUserCommand("Bob"));
 
-    assertAll(
-        () -> assertEquals(new Success(), status),
-        () -> assertThat(repository.findAll().get(1).id(), is(any(String.class))),
-        () -> assertEquals("Bob", repository.findAll().get(1).name()));
+    assertEquals(new Success(), status, "command status");
+    assertEquals(2, eventStore.replay().count(), "1 new event");
+    var event = eventStore.replay().toList().get(1);
+    assertThat("event.id", event.id(), is(any(String.class)));
+    assertThat("event.timestamp", event.timestamp(), is(any(Instant.class)));
+    assertEquals("Bob", ((UserCreatedEvent) event).name(), "event.name");
   }
 
-  @Nested
-  @Tag("sql")
-  class Database {
-    private static DataSource dataSource;
+  @Test
+  void testHandle_UserAlreadyExists() {
+    var eventStore = new MemoryEventStore();
+    eventStore.addExamples();
+    var handler = new CreateUserCommandHandler(eventStore);
 
-    @BeforeAll
-    static void initAll() {
-      dataSource = TestDataSourceFactory.createDataSource();
-    }
+    var status = handler.handle(new CreateUserCommand("Alice"));
 
-    @Test
-    void testHandle() {
-      var repository = new SqlUserRepository(dataSource);
-      var handler = new CreateUserCommandHandler(repository);
-
-      var status = handler.handle(new CreateUserCommand("Bob"));
-
-      assertAll(
-          () -> assertEquals(new Success(), status),
-          () -> assertThat(repository.findAll().get(1).id(), is(any(String.class))),
-          () -> assertEquals("Bob", repository.findAll().get(1).name()));
-    }
-
-    @AfterEach
-    void tearDown() throws Exception {
-      var sql = """
-      DELETE FROM users
-      WHERE name = 'Bob'
-      """;
-      try (var connection = dataSource.getConnection()) {
-        try (var statement = connection.prepareStatement(sql)) {
-          statement.executeUpdate();
-        }
-      }
-    }
+    assertEquals(new Failure("User already exists"), status, "command status");
+    assertEquals(1, eventStore.replay().count(), "no new event");
   }
 }

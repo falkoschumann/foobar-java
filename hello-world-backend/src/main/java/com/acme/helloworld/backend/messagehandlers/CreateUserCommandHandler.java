@@ -5,25 +5,28 @@
 
 package com.acme.helloworld.backend.messagehandlers;
 
-import com.acme.helloworld.contract.data.User;
+import com.acme.helloworld.backend.EventStore;
+import com.acme.helloworld.backend.events.UserCreatedEvent;
 import com.acme.helloworld.contract.messages.commands.CommandStatus;
 import com.acme.helloworld.contract.messages.commands.CreateUserCommand;
 import com.acme.helloworld.contract.messages.commands.Failure;
 import com.acme.helloworld.contract.messages.commands.Success;
 
 public class CreateUserCommandHandler {
-  private final UserRepository repository;
+  // TODO Nutze Replay nur initial und dann Recorded Observer
+  private final EventStore eventStore;
 
-  public CreateUserCommandHandler(UserRepository repository) {
-    this.repository = repository;
+  public CreateUserCommandHandler(EventStore eventStore) {
+    this.eventStore = eventStore;
   }
 
   public CommandStatus handle(CreateUserCommand command) {
-    try {
-      repository.createUser(new User(command.name()));
-      return new Success();
-    } catch (Exception e) {
-      return new Failure(e.getLocalizedMessage());
+    var users = eventStore.replay(UserCreatedEvent.class).map(UserCreatedEvent::name).toList();
+    if (users.contains(command.name())) {
+      return new Failure("User already exists");
     }
+
+    eventStore.record(new UserCreatedEvent(command.name()));
+    return new Success();
   }
 }

@@ -8,9 +8,9 @@ package com.acme.helloworld.backend;
 import com.acme.helloworld.contract.data.Bounds;
 
 public interface PreferencesRepository {
-  String loadEventStreamFile();
+  String loadGreeting();
 
-  void storeEventStreamFile(String file);
+  void storeGreeting(String greeting);
 
   Bounds loadMainWindowBounds();
 

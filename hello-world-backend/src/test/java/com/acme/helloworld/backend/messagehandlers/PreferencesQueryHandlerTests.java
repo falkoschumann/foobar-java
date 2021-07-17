@@ -21,9 +21,6 @@ class PreferencesQueryHandlerTests {
 
     var result = handler.handle(new PreferencesQuery());
 
-    assertEquals(
-        new PreferencesQueryResult(
-            new DatabaseConnection(true, "localhost", 5432, "acme_test", "acme_test", "acme_test")),
-        result);
+    assertEquals(new PreferencesQueryResult("Hello $user"), result);
   }
 }

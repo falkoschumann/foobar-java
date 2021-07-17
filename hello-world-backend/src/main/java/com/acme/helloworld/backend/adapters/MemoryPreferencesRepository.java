@@ -9,22 +9,23 @@ import com.acme.helloworld.backend.PreferencesRepository;
 import com.acme.helloworld.contract.data.Bounds;
 
 public class MemoryPreferencesRepository implements PreferencesRepository {
-  private String eventStreamFile;
+  private String greeting;
   private Bounds mainWindowBounds = Bounds.NULL;
 
-  public void addExamples() {
-    eventStreamFile = "~/.hello-world/event-stream.csv";
+  public MemoryPreferencesRepository addExamples() {
+    greeting = "Hello $user";
     mainWindowBounds = new Bounds(36, 24, 640, 480);
+    return this;
   }
 
   @Override
-  public String loadEventStreamFile() {
-    return eventStreamFile;
+  public String loadGreeting() {
+    return greeting;
   }
 
   @Override
-  public void storeEventStreamFile(String file) {
-    eventStreamFile = file;
+  public void storeGreeting(String greeting) {
+    this.greeting = greeting;
   }
 
   @Override

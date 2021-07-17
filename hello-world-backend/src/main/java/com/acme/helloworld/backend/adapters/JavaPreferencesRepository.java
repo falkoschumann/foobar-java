@@ -10,6 +10,7 @@ import com.acme.helloworld.contract.data.Bounds;
 
 public class JavaPreferencesRepository implements PreferencesRepository {
   private static final String APP_NODE = "/com/acme/helloworld";
+  private static final String GREETING = "greeting";
   private static final String MAIN_WINDOW_BOUNDS_X = "mainWindowBounds/x";
   private static final String MAIN_WINDOW_BOUNDS_Y = "mainWindowBounds/y";
   private static final String MAIN_WINDOW_BOUNDS_WIDTH = "mainWindowBounds/width";
@@ -19,12 +20,14 @@ public class JavaPreferencesRepository implements PreferencesRepository {
       java.util.prefs.Preferences.userRoot().node(APP_NODE);
 
   @Override
-  public String loadEventStreamFile() {
-    return null;
+  public String loadGreeting() {
+    return preferences.get(GREETING, "Hello $user");
   }
 
   @Override
-  public void storeEventStreamFile(String file) {}
+  public void storeGreeting(String greeting) {
+    preferences.put(GREETING, greeting);
+  }
 
   @Override
   public Bounds loadMainWindowBounds() {

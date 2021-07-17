@@ -17,7 +17,7 @@ public class MainWindowBoundsQueryHandler {
   }
 
   public MainWindowBoundsQueryResult handle(MainWindowBoundsQuery query) {
-    var windowBounds = preferencesRepository.loadWindowBounds();
+    var windowBounds = preferencesRepository.loadMainWindowBounds();
     return new MainWindowBoundsQueryResult(windowBounds);
   }
 }
