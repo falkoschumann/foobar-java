@@ -1,18 +1,18 @@
 import org.apache.tools.ant.taskdefs.condition.Os
 
 plugins {
-  id("acme.java-application-conventions")
-  id("acme.java-openjfx-conventions")
+  id "acme.java-application-conventions"
+  id "acme.java-openjfx-conventions"
 }
 
 dependencies {
-  implementation(project(":hello-world-frontend"))
-  implementation(project(":hello-world-backend"))
+  implementation project(":hello-world-frontend")
+  implementation project(":hello-world-backend")
 }
 
 application {
-  mainModule.set("com.acme.helloworld")
-  mainClass.set("com.acme.helloworld.App")
+  mainModule = "com.acme.helloworld"
+  mainClass = "com.acme.helloworld.App"
 }
 
 if (Os.isFamily(Os.FAMILY_MAC)) {
