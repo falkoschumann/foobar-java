@@ -5,23 +5,31 @@
 
 package com.acme.helloworld;
 
+import com.acme.helloworld.backend.EventStore;
 import com.acme.helloworld.backend.PreferencesRepository;
+import com.acme.helloworld.backend.adapters.CsvEventStore;
 import com.acme.helloworld.backend.adapters.JavaPreferencesRepository;
+import com.acme.helloworld.backend.adapters.MemoryEventStore;
 import com.acme.helloworld.backend.adapters.MemoryPreferencesRepository;
-import com.acme.helloworld.backend.messagehandlers.*;
 import com.acme.helloworld.backend.messagehandlers.ChangeMainWindowBoundsCommandHandler;
 import com.acme.helloworld.backend.messagehandlers.ChangePreferencesCommandHandler;
 import com.acme.helloworld.backend.messagehandlers.CreateUserCommandHandler;
+import com.acme.helloworld.backend.messagehandlers.MainWindowBoundsQueryHandler;
+import com.acme.helloworld.backend.messagehandlers.NewestUserQueryHandler;
 import com.acme.helloworld.backend.messagehandlers.PreferencesQueryHandler;
-import com.acme.helloworld.backend.messagehandlers.UsersQueryHandler;
+import com.acme.helloworld.contract.messages.commands.Failure;
+import com.acme.helloworld.contract.messages.notifications.UserNotCreatedNotification;
+import com.acme.helloworld.contract.messages.queries.NewestUserQuery;
 import com.acme.helloworld.contract.messages.queries.PreferencesQuery;
-import com.acme.helloworld.contract.messages.queries.UsersQuery;
-import com.acme.helloworld.frontend.HelloWorldController;
+import com.acme.helloworld.frontend.MainWindowController;
+import java.nio.file.Paths;
+import java.util.concurrent.CompletableFuture;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.stage.Stage;
 
 public class App extends Application {
-  private UserRepository userRepository;
+  private EventStore eventStore;
   private PreferencesRepository preferencesRepository;
 
   public static void main(String[] args) {
@@ -31,13 +39,11 @@ public class App extends Application {
   @Override
   public void init() {
     if (getParameters().getUnnamed().contains("--demo")) {
-      userRepository = new MemoryUserRepository().addExamples();
-      preferencesRepository = new MemoryPreferencesRepository();
+      eventStore = new MemoryEventStore().addExamples();
+      preferencesRepository = new MemoryPreferencesRepository().addExamples();
     } else {
-      var dataSource =
-          DataSourceFactory.createDataSource(
-              "localhost", 5432, "acme_test", "acme_test", "acme_test");
-      userRepository = new SqlUserRepository(dataSource);
+      var file = Paths.get(System.getProperty("user.home"), ".helloworld/eventstream.csv");
+      eventStore = new CsvEventStore(file.toString());
       preferencesRepository = new JavaPreferencesRepository();
     }
   }
@@ -48,18 +54,12 @@ public class App extends Application {
         new ChangeMainWindowBoundsCommandHandler(preferencesRepository);
     var changePreferencesCommandHandler =
         new ChangePreferencesCommandHandler(preferencesRepository);
-    var createUserCommandHandler = new CreateUserCommandHandler(userRepository);
-    var testDatabaseConnectionCommandHandler = new TestDatabaseConnectionCommandHandler();
+    var createUserCommandHandler = new CreateUserCommandHandler(eventStore);
     var mainWindowBoundsQueryHandler = new MainWindowBoundsQueryHandler(preferencesRepository);
+    var newestUserQueryHandler = new NewestUserQueryHandler(eventStore);
     var preferencesQueryHandler = new PreferencesQueryHandler(preferencesRepository);
-    var usersQueryHandler = new UsersQueryHandler(userRepository);
-    var frontend = HelloWorldController.create(primaryStage);
+    var frontend = MainWindowController.create(primaryStage);
 
-    testDatabaseConnectionCommandHandler.setOnDatabaseConnectionFaultyNotification(
-        frontend::display);
-    testDatabaseConnectionCommandHandler.setOnDatabaseConnectionSuccessfulNotification(
-        frontend::display);
-    usersQueryHandler.setOnDatabaseConnectionFaultyNotification(frontend::display);
     frontend.setOnChangeMainWindowBoundsCommand(changeMainWindowBoundsCommandHandler::handle);
     frontend.setOnChangePreferencesCommand(
         command -> {
@@ -68,25 +68,31 @@ public class App extends Application {
           frontend.display(result);
         });
     frontend.setOnCreateUserCommand(
-        command -> {
-          createUserCommandHandler.handle(command);
-          var result = usersQueryHandler.handle(new UsersQuery());
-          frontend.display(result);
-        });
-    frontend.setOnTestDatabaseConnectionCommand(testDatabaseConnectionCommandHandler::handle);
+        command ->
+            CompletableFuture.supplyAsync(() -> createUserCommandHandler.handle(command))
+                .thenAcceptAsync(
+                    status -> {
+                      if (status instanceof Failure failure) {
+                        frontend.display(new UserNotCreatedNotification(failure.errorMessage()));
+                      } else {
+                        var result = newestUserQueryHandler.handle(new NewestUserQuery());
+                        frontend.display(result);
+                      }
+                    },
+                    Platform::runLater));
     frontend.setOnMainWindowBoundsQuery(
         query -> {
           var result = mainWindowBoundsQueryHandler.handle(query);
           frontend.display(result);
         });
+    frontend.setOnNewestUserQuery(
+        query -> {
+          var result = newestUserQueryHandler.handle(query);
+          frontend.display(result);
+        });
     frontend.setOnPreferencesQuery(
         query -> {
           var result = preferencesQueryHandler.handle(query);
-          frontend.display(result);
-        });
-    frontend.setOnUsersQuery(
-        query -> {
-          var result = usersQueryHandler.handle(query);
           frontend.display(result);
         });
 
