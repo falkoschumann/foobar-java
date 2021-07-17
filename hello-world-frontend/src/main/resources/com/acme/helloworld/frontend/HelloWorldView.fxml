@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.stage.Stage?>
 
-<fx:root fx:id="stage" title="Hello World" type="Stage" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.acme.helloworld.frontend.HelloWorldController">
+<fx:root fx:id="stage" onCloseRequest="#handleClose" title="Hello World" type="Stage" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.acme.helloworld.frontend.HelloWorldController">
    <scene>
       <Scene stylesheets="@style.css">
          <root>

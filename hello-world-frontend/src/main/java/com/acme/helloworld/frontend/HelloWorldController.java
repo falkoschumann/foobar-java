@@ -107,19 +107,9 @@ public class HelloWorldController {
       menuBar.setUseSystemMenuBar(true);
     }
 
-    stage.xProperty().addListener(o -> windowBoundsChanged());
-    stage.yProperty().addListener(o -> windowBoundsChanged());
-    stage.widthProperty().addListener(o -> windowBoundsChanged());
-    stage.heightProperty().addListener(o -> windowBoundsChanged());
     model
         .newestUserProperty()
         .addListener(o -> greeting.setText("Hello " + model.getNewestUser().name()));
-  }
-
-  private void windowBoundsChanged() {
-    onChangeMainWindowBoundsCommand.accept(
-        new ChangeMainWindowBoundsCommand(
-            new Bounds(stage.getX(), stage.getY(), stage.getWidth(), stage.getHeight())));
   }
 
   @FXML
@@ -130,6 +120,9 @@ public class HelloWorldController {
 
   @FXML
   private void handleClose() {
+    onChangeMainWindowBoundsCommand.accept(
+        new ChangeMainWindowBoundsCommand(
+            new Bounds(stage.getX(), stage.getY(), stage.getWidth(), stage.getHeight())));
     stage.close();
   }
 
