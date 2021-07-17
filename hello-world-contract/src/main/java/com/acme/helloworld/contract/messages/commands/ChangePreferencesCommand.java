@@ -7,8 +7,8 @@ package com.acme.helloworld.contract.messages.commands;
 
 import java.util.Objects;
 
-public record ChangePreferencesCommand(String eventStreamFile) {
+public record ChangePreferencesCommand(String greeting) {
   public ChangePreferencesCommand {
-    Objects.requireNonNull(eventStreamFile, "eventStreamFile");
+    Objects.requireNonNull(greeting, "greeting");
   }
 }
