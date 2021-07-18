@@ -18,10 +18,6 @@ import lombok.Setter;
 class MainWindowModel {
   @Getter @Setter private String greeting;
 
-  boolean isRunningOnMac() {
-    return System.getProperty("os.name").toLowerCase().contains("mac");
-  }
-
   private final ReadOnlyStringWrapper userGreeting = new ReadOnlyStringWrapper("Hello");
 
   final String getUserGreeting() {

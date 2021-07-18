@@ -10,7 +10,6 @@ import java.io.UncheckedIOException;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -25,7 +24,6 @@ public class AboutController {
       loader.load();
 
       var controller = (AboutController) loader.getController();
-      controller.stage.initModality(Modality.APPLICATION_MODAL);
       controller.stage.initOwner(owner);
       controller.stage.initStyle(StageStyle.UTILITY);
       return controller;

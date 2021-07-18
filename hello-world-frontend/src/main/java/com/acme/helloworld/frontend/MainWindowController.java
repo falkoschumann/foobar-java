@@ -47,6 +47,9 @@ public class MainWindowController {
   @FXML private TextField name;
   @FXML private Button createUserButton;
 
+  private PreferencesController preferencesController;
+  private AboutController aboutController;
+
   private MainWindowModel model;
 
   public static MainWindowController create(Stage stage) {
@@ -64,10 +67,10 @@ public class MainWindowController {
 
   @FXML
   private void initialize() {
+    preferencesController = PreferencesController.create(stage);
+    aboutController = AboutController.create(stage);
+    menuBar.setUseSystemMenuBar(true);
     model = new MainWindowModel();
-    if (model.isRunningOnMac()) {
-      menuBar.setUseSystemMenuBar(true);
-    }
 
     greeting.textProperty().bind(model.userGreetingProperty());
     name.textProperty().bindBidirectional(model.userNameProperty());
@@ -103,6 +106,7 @@ public class MainWindowController {
 
   public void display(PreferencesQueryResult result) {
     model.setGreeting(result.greeting());
+    preferencesController.display(new PreferencesQueryResult(model.getGreeting()));
   }
 
   public void display(NewestUserQueryResult result) {
@@ -120,10 +124,8 @@ public class MainWindowController {
 
   @FXML
   private void handleShowPreferences() {
-    var controller = PreferencesController.create(stage);
-    controller.setOnChangePreferencesCommand(onChangePreferencesCommand);
-    controller.display(new PreferencesQueryResult(model.getGreeting()));
-    controller.run();
+    preferencesController.setOnChangePreferencesCommand(onChangePreferencesCommand);
+    preferencesController.run();
   }
 
   @FXML
@@ -136,8 +138,7 @@ public class MainWindowController {
 
   @FXML
   private void handleShowAbout() {
-    var controller = AboutController.create(stage);
-    controller.run();
+    aboutController.run();
   }
 
   @FXML

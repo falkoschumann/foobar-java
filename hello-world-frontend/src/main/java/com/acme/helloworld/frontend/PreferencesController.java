@@ -14,7 +14,6 @@ import java.util.function.Consumer;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TextField;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.Setter;
@@ -33,7 +32,6 @@ public class PreferencesController {
       loader.load();
 
       var controller = (PreferencesController) loader.getController();
-      controller.stage.initModality(Modality.APPLICATION_MODAL);
       controller.stage.initOwner(owner);
       return controller;
     } catch (IOException e) {
