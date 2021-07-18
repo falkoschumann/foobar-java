@@ -16,7 +16,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -44,8 +43,7 @@ public class PreferencesController {
 
   @FXML
   private void initialize() {
-    // FIXME Ctrl-W closes main window too
-    Stages.hookCloseHandler(stage, () -> handleCloseRequest(null));
+    Stages.hookCloseHandler(stage, this::handleClose);
   }
 
   public void run() {
@@ -57,7 +55,8 @@ public class PreferencesController {
   }
 
   @FXML
-  private void handleCloseRequest(WindowEvent windowEvent) {
+  private void handleClose() {
     onChangePreferencesCommand.accept(new ChangePreferencesCommand(greeting.getText()));
+    stage.close();
   }
 }

@@ -6,7 +6,8 @@
 package com.acme.helloworld.frontend;
 
 import com.acme.helloworld.contract.data.User;
-import java.util.Optional;
+import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleStringProperty;
@@ -21,7 +22,7 @@ class MainWindowModel {
     return System.getProperty("os.name").toLowerCase().contains("mac");
   }
 
-  private final ReadOnlyStringWrapper userGreeting = new ReadOnlyStringWrapper("");
+  private final ReadOnlyStringWrapper userGreeting = new ReadOnlyStringWrapper("Hello");
 
   final String getUserGreeting() {
     return userGreeting.get();
@@ -35,7 +36,13 @@ class MainWindowModel {
     return userGreeting.getReadOnlyProperty();
   }
 
-  private final StringProperty userName = new SimpleStringProperty("");
+  private final StringProperty userName =
+      new SimpleStringProperty("") {
+        @Override
+        protected void invalidated() {
+          setCreateUserDisabled(getValue().isBlank());
+        }
+      };
 
   final String getUserName() {
     return userName.get();
@@ -49,9 +56,26 @@ class MainWindowModel {
     return userName;
   }
 
+  private final ReadOnlyBooleanWrapper createUserDisabled = new ReadOnlyBooleanWrapper(true);
+
+  final boolean isCreateUserDisabled() {
+    return createUserDisabled.get();
+  }
+
+  private void setCreateUserDisabled(boolean createUserDisabled) {
+    this.createUserDisabled.set(createUserDisabled);
+  }
+
+  final ReadOnlyBooleanProperty createUserDisabledProperty() {
+    return createUserDisabled.getReadOnlyProperty();
+  }
+
   void userAdded(User user) {
-    var name = Optional.ofNullable(user).map(User::name).orElse("");
-    var s = getGreeting().replace("$user", name);
+    if (user == null) {
+      return;
+    }
+
+    var s = getGreeting().replace("$user", user.name());
     setUserGreeting(s);
     setUserName("");
   }

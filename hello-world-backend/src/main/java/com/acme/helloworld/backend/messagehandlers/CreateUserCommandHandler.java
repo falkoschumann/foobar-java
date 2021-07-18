@@ -11,18 +11,29 @@ import com.acme.helloworld.contract.messages.commands.CommandStatus;
 import com.acme.helloworld.contract.messages.commands.CreateUserCommand;
 import com.acme.helloworld.contract.messages.commands.Failure;
 import com.acme.helloworld.contract.messages.commands.Success;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 public class CreateUserCommandHandler {
-  // TODO Nutze Replay nur initial und dann Recorded Observer
   private final EventStore eventStore;
+  private final Set<String> userNames = new LinkedHashSet<>();
 
   public CreateUserCommandHandler(EventStore eventStore) {
     this.eventStore = eventStore;
+
+    var names = eventStore.replay(UserCreatedEvent.class).map(UserCreatedEvent::name).toList();
+    userNames.addAll(names);
+
+    eventStore.addRecordedObserver(
+        it -> {
+          if (it instanceof UserCreatedEvent e) {
+            userNames.add(e.name());
+          }
+        });
   }
 
   public CommandStatus handle(CreateUserCommand command) {
-    var users = eventStore.replay(UserCreatedEvent.class).map(UserCreatedEvent::name).toList();
-    if (users.contains(command.name())) {
+    if (userNames.contains(command.name())) {
       return new Failure("User already exists");
     }
 

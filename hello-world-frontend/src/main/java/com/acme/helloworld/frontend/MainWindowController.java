@@ -24,6 +24,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.TextField;
@@ -44,6 +45,7 @@ public class MainWindowController {
   @FXML private MenuBar menuBar;
   @FXML private Label greeting;
   @FXML private TextField name;
+  @FXML private Button createUserButton;
 
   private MainWindowModel model;
 
@@ -69,6 +71,7 @@ public class MainWindowController {
 
     greeting.textProperty().bind(model.userGreetingProperty());
     name.textProperty().bindBidirectional(model.userNameProperty());
+    createUserButton.disableProperty().bind(model.createUserDisabledProperty());
   }
 
   public void run() {
@@ -139,6 +142,10 @@ public class MainWindowController {
 
   @FXML
   private void handleCreateUser() {
+    if (model.isCreateUserDisabled()) {
+      return;
+    }
+
     onCreateUserCommand.accept(new CreateUserCommand(model.getUserName()));
   }
 }

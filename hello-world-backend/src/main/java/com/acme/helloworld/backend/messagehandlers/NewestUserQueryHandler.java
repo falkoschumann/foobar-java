@@ -12,21 +12,25 @@ import com.acme.helloworld.contract.messages.queries.NewestUserQuery;
 import com.acme.helloworld.contract.messages.queries.NewestUserQueryResult;
 
 public class NewestUserQueryHandler {
-  // TODO Nutze Replay nur initial und dann Recorded Observer
-  private final EventStore eventStore;
+  private User newestUser;
 
   public NewestUserQueryHandler(EventStore eventStore) {
-    this.eventStore = eventStore;
+    newestUser =
+        eventStore
+            .replay(UserCreatedEvent.class)
+            .reduce((first, second) -> second)
+            .map(it -> new User(it.id(), it.name()))
+            .orElse(null);
+
+    eventStore.addRecordedObserver(
+        it -> {
+          if (it instanceof UserCreatedEvent e) {
+            newestUser = new User(e.id(), e.name());
+          }
+        });
   }
 
   public NewestUserQueryResult handle(NewestUserQuery query) {
-    var events = eventStore.replay(UserCreatedEvent.class).toList();
-    if (events.isEmpty()) {
-      return new NewestUserQueryResult(null);
-    }
-
-    var lastEvent = events.get(events.size() - 1);
-    var user = new User(lastEvent.id(), lastEvent.name());
-    return new NewestUserQueryResult(user);
+    return new NewestUserQueryResult(newestUser);
   }
 }

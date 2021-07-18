@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.stage.Stage?>
 
-<Stage fx:id="stage" onCloseRequest="#handleCloseRequest" resizable="false" title="Preferences" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.acme.helloworld.frontend.PreferencesController">
+<Stage fx:id="stage" onCloseRequest="#handleClose" resizable="false" title="Preferences" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.acme.helloworld.frontend.PreferencesController">
    <scene>
       <Scene stylesheets="@style.css">
          <root>
