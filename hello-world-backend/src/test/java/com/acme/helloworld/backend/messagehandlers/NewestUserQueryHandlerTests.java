@@ -22,8 +22,6 @@ class NewestUserQueryHandlerTests {
 
     var result = handler.handle(new NewestUserQuery());
 
-    assertEquals(
-        new NewestUserQueryResult(new User("0dc31588-bda7-4987-adc5-ad4413fc3e54", "Alice")),
-        result);
+    assertEquals(new NewestUserQueryResult(new User("Alice")), result);
   }
 }

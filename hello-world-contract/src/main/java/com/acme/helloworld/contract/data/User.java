@@ -7,9 +7,8 @@ package com.acme.helloworld.contract.data;
 
 import java.util.Objects;
 
-public record User(String id, String name) {
+public record User(String name) {
   public User {
-    Objects.requireNonNull(id, "id");
     Objects.requireNonNull(name, "name");
   }
 }

@@ -7,6 +7,7 @@ package com.acme.helloworld.backend.adapters;
 
 import com.acme.helloworld.backend.PreferencesRepository;
 import com.acme.helloworld.contract.data.Bounds;
+import java.util.prefs.Preferences;
 
 public class JavaPreferencesRepository implements PreferencesRepository {
   private static final String APP_NODE = "/com/acme/helloworld";
@@ -16,8 +17,7 @@ public class JavaPreferencesRepository implements PreferencesRepository {
   private static final String MAIN_WINDOW_BOUNDS_WIDTH = "mainWindowBounds/width";
   private static final String MAIN_WINDOW_BOUNDS_HEIGHT = "mainWindowBounds/height";
 
-  private final java.util.prefs.Preferences preferences =
-      java.util.prefs.Preferences.userRoot().node(APP_NODE);
+  private final Preferences preferences = Preferences.userRoot().node(APP_NODE);
 
   @Override
   public String loadGreeting() {

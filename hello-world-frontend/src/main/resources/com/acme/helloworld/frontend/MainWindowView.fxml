@@ -46,7 +46,7 @@
                   </MenuBar>
                   <VBox spacing="16.0">
                      <children>
-                       <Label fx:id="greeting" styleClass="title" text="Hello ..." />
+                       <Label fx:id="greeting" styleClass="title" text="Hello" />
                         <HBox spacing="8.0">
                            <children>
                               <TextField fx:id="name" onAction="#handleCreateUser" promptText="Name" />

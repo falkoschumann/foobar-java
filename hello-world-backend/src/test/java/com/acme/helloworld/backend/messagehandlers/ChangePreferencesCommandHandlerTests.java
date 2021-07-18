@@ -21,7 +21,7 @@ class ChangePreferencesCommandHandlerTests {
 
     var status = handler.handle(new ChangePreferencesCommand("Bonjour $user"));
 
-    assertEquals(new Success(), status);
-    assertEquals("Bonjour $user", repository.loadGreeting());
+    assertEquals(new Success(), status, "command status");
+    assertEquals("Bonjour $user", repository.loadGreeting(), "greeting");
   }
 }

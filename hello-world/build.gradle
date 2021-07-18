@@ -29,6 +29,9 @@ if (Os.isFamily(Os.FAMILY_WINDOWS)) {
     jpackage {
       imageName = "Hello World"
       installerName = "Hello World"
+      installerOptions += [
+        "--win-upgrade-uuid", "be60334f-312d-42bd-9cba-cac6d2993dd6"
+      ]
     }
   }
 }

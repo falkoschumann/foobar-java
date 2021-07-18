@@ -34,7 +34,7 @@ public class CreateUserCommandHandler {
 
   public CommandStatus handle(CreateUserCommand command) {
     if (userNames.contains(command.name())) {
-      return new Failure("User already exists");
+      return new Failure("User already exists.");
     }
 
     eventStore.record(new UserCreatedEvent(command.name()));

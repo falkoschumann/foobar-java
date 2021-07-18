@@ -19,13 +19,13 @@ public class NewestUserQueryHandler {
         eventStore
             .replay(UserCreatedEvent.class)
             .reduce((first, second) -> second)
-            .map(it -> new User(it.id(), it.name()))
+            .map(it -> new User(it.name()))
             .orElse(null);
 
     eventStore.addRecordedObserver(
         it -> {
           if (it instanceof UserCreatedEvent e) {
-            newestUser = new User(e.id(), e.name());
+            newestUser = new User(e.name());
           }
         });
   }
