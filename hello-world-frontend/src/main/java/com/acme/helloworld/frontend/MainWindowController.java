@@ -106,7 +106,7 @@ public class MainWindowController {
 
   public void display(PreferencesQueryResult result) {
     model.setGreeting(result.greeting());
-    preferencesController.display(new PreferencesQueryResult(model.getGreeting()));
+    preferencesController.display(result);
   }
 
   public void display(NewestUserQueryResult result) {

@@ -17,7 +17,7 @@ public class PreferencesQueryHandler {
   }
 
   public PreferencesQueryResult handle(PreferencesQuery query) {
-    var eventStreamFile = repository.loadGreeting();
-    return new PreferencesQueryResult(eventStreamFile);
+    var greeting = repository.loadGreeting();
+    return new PreferencesQueryResult(greeting);
   }
 }
