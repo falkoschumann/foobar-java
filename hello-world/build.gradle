@@ -28,7 +28,7 @@ if (Os.isFamily(Os.FAMILY_WINDOWS)) {
   jlink {
     jpackage {
       imageName = "Hello World"
-      installerName = "Hello World"
+      installerName = "hello-world"
       installerOptions += [
         "--win-upgrade-uuid", "be60334f-312d-42bd-9cba-cac6d2993dd6"
       ]
