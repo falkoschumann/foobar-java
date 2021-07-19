@@ -9,7 +9,7 @@ import com.acme.helloworld.backend.PreferencesRepository;
 import com.acme.helloworld.contract.data.Bounds;
 import java.util.prefs.Preferences;
 
-public class JavaPreferencesRepository implements PreferencesRepository {
+public class PrefsPreferencesRepository implements PreferencesRepository {
   private static final String APP_NODE = "/com/acme/helloworld";
   private static final String GREETING = "greeting";
   private static final String MAIN_WINDOW_BOUNDS_X = "mainWindowBounds/x";

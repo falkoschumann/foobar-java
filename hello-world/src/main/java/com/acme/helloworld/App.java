@@ -8,9 +8,9 @@ package com.acme.helloworld;
 import com.acme.helloworld.backend.EventStore;
 import com.acme.helloworld.backend.PreferencesRepository;
 import com.acme.helloworld.backend.adapters.CsvEventStore;
-import com.acme.helloworld.backend.adapters.JavaPreferencesRepository;
 import com.acme.helloworld.backend.adapters.MemoryEventStore;
 import com.acme.helloworld.backend.adapters.MemoryPreferencesRepository;
+import com.acme.helloworld.backend.adapters.PrefsPreferencesRepository;
 import com.acme.helloworld.backend.messagehandlers.ChangeMainWindowBoundsCommandHandler;
 import com.acme.helloworld.backend.messagehandlers.ChangePreferencesCommandHandler;
 import com.acme.helloworld.backend.messagehandlers.CreateUserCommandHandler;
@@ -44,7 +44,7 @@ public class App extends Application {
     } else {
       var file = Paths.get(System.getProperty("user.home"), ".helloworld/eventstream.csv");
       eventStore = new CsvEventStore(file.toString());
-      preferencesRepository = new JavaPreferencesRepository();
+      preferencesRepository = new PrefsPreferencesRepository();
     }
   }
 

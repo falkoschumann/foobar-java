@@ -25,8 +25,7 @@ TODO: Usage
 
 ## Contributing
 
-- Build mit `.gradlew clean build`; alternativ ohne SQL-Tests mit
-  `.gradlew clean build -x testSql`
+- Build mit `.gradlew clean build`
 - Release erstellen mit `./gradlew jpackage`
 - Code Style [Google Java Style Guide][1] wird beim Build geprüft und
   mit `./gradlew spotlessApply` formatiert
