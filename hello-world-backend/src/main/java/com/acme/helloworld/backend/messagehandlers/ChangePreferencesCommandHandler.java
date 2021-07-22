@@ -8,6 +8,7 @@ package com.acme.helloworld.backend.messagehandlers;
 import com.acme.helloworld.backend.PreferencesRepository;
 import com.acme.helloworld.contract.messages.commands.ChangePreferencesCommand;
 import com.acme.helloworld.contract.messages.commands.CommandStatus;
+import com.acme.helloworld.contract.messages.commands.Failure;
 import com.acme.helloworld.contract.messages.commands.Success;
 
 public class ChangePreferencesCommandHandler {
@@ -18,7 +19,11 @@ public class ChangePreferencesCommandHandler {
   }
 
   public CommandStatus handle(ChangePreferencesCommand command) {
-    repository.storeGreeting(command.greeting());
-    return new Success();
+    try {
+      repository.storeGreeting(command.greeting());
+      return new Success();
+    } catch (Exception e) {
+      return new Failure("Storing settings failed: " + e.getMessage());
+    }
   }
 }

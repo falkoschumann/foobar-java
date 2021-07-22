@@ -9,7 +9,7 @@ import com.acme.helloworld.contract.data.Bounds;
 import com.acme.helloworld.contract.messages.commands.ChangeMainWindowBoundsCommand;
 import com.acme.helloworld.contract.messages.commands.ChangePreferencesCommand;
 import com.acme.helloworld.contract.messages.commands.CreateUserCommand;
-import com.acme.helloworld.contract.messages.notifications.UserNotCreatedNotification;
+import com.acme.helloworld.contract.messages.commands.Failure;
 import com.acme.helloworld.contract.messages.queries.MainWindowBoundsQuery;
 import com.acme.helloworld.contract.messages.queries.MainWindowBoundsQueryResult;
 import com.acme.helloworld.contract.messages.queries.NewestUserQuery;
@@ -113,12 +113,11 @@ public class MainWindowController {
     model.userAdded(result.user());
   }
 
-  public void display(UserNotCreatedNotification notification) {
+  public void display(Failure failure) {
     var alert = new Alert(AlertType.ERROR);
     alert.initOwner(stage);
-    alert.setTitle("Error");
-    alert.setHeaderText("User not created");
-    alert.setContentText(notification.errorMessage());
+    alert.setHeaderText(null);
+    alert.setContentText(failure.errorMessage());
     alert.show();
   }
 

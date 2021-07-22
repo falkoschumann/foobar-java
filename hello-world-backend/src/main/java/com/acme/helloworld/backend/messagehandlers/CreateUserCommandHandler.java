@@ -34,10 +34,15 @@ public class CreateUserCommandHandler {
 
   public CommandStatus handle(CreateUserCommand command) {
     if (userNames.contains(command.name())) {
-      return new Failure("User already exists.");
+      var message = "User already exists.";
+      return new Failure("User not created: " + message);
     }
 
-    eventStore.record(new UserCreatedEvent(command.name()));
-    return new Success();
+    try {
+      eventStore.record(new UserCreatedEvent(command.name()));
+      return new Success();
+    } catch (Exception e) {
+      return new Failure("Recording event failed: " + e.getMessage());
+    }
   }
 }

@@ -43,7 +43,7 @@ class CreateUserCommandHandlerTests {
 
     var status = handler.handle(new CreateUserCommand("Alice"));
 
-    assertEquals(new Failure("User already exists."), status, "command status");
+    assertEquals(new Failure("User not created: User already exists."), status, "command status");
     assertEquals(1, eventStore.replay().count(), "no new event");
   }
 }

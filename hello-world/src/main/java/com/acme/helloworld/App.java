@@ -18,11 +18,9 @@ import com.acme.helloworld.backend.messagehandlers.MainWindowBoundsQueryHandler;
 import com.acme.helloworld.backend.messagehandlers.NewestUserQueryHandler;
 import com.acme.helloworld.backend.messagehandlers.PreferencesQueryHandler;
 import com.acme.helloworld.contract.messages.commands.Failure;
-import com.acme.helloworld.contract.messages.notifications.UserNotCreatedNotification;
 import com.acme.helloworld.contract.messages.queries.NewestUserQuery;
 import com.acme.helloworld.contract.messages.queries.PreferencesQuery;
 import com.acme.helloworld.frontend.MainWindowController;
-import java.nio.file.Paths;
 import java.util.concurrent.CompletableFuture;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -42,8 +40,7 @@ public class App extends Application {
       eventStore = new MemoryEventStore().addExamples();
       preferencesRepository = new MemoryPreferencesRepository().addExamples();
     } else {
-      var file = Paths.get(System.getProperty("user.home"), ".helloworld/eventstream.csv");
-      eventStore = new CsvEventStore(file.toString());
+      eventStore = new CsvEventStore();
       preferencesRepository = new PrefsPreferencesRepository();
     }
   }
@@ -60,20 +57,37 @@ public class App extends Application {
     var preferencesQueryHandler = new PreferencesQueryHandler(preferencesRepository);
     var frontend = MainWindowController.create(primaryStage);
 
-    frontend.setOnChangeMainWindowBoundsCommand(changeMainWindowBoundsCommandHandler::handle);
+    frontend.setOnChangeMainWindowBoundsCommand(
+        command ->
+            CompletableFuture.supplyAsync(
+                    () -> changeMainWindowBoundsCommandHandler.handle(command))
+                .thenAcceptAsync(
+                    status -> {
+                      if (status instanceof Failure failure) {
+                        frontend.display(failure);
+                      }
+                    },
+                    Platform::runLater));
     frontend.setOnChangePreferencesCommand(
-        command -> {
-          changePreferencesCommandHandler.handle(command);
-          var result = preferencesQueryHandler.handle(new PreferencesQuery());
-          frontend.display(result);
-        });
+        command ->
+            CompletableFuture.supplyAsync(() -> changePreferencesCommandHandler.handle(command))
+                .thenAcceptAsync(
+                    status -> {
+                      if (status instanceof Failure failure) {
+                        frontend.display(failure);
+                      } else {
+                        var result = preferencesQueryHandler.handle(new PreferencesQuery());
+                        frontend.display(result);
+                      }
+                    },
+                    Platform::runLater));
     frontend.setOnCreateUserCommand(
         command ->
             CompletableFuture.supplyAsync(() -> createUserCommandHandler.handle(command))
                 .thenAcceptAsync(
                     status -> {
                       if (status instanceof Failure failure) {
-                        frontend.display(new UserNotCreatedNotification(failure.errorMessage()));
+                        frontend.display(failure);
                       } else {
                         var result = newestUserQueryHandler.handle(new NewestUserQuery());
                         frontend.display(result);
@@ -81,20 +95,17 @@ public class App extends Application {
                     },
                     Platform::runLater));
     frontend.setOnMainWindowBoundsQuery(
-        query -> {
-          var result = mainWindowBoundsQueryHandler.handle(query);
-          frontend.display(result);
-        });
+        query ->
+            CompletableFuture.supplyAsync(() -> mainWindowBoundsQueryHandler.handle(query))
+                .thenAcceptAsync(frontend::display, Platform::runLater));
     frontend.setOnNewestUserQuery(
-        query -> {
-          var result = newestUserQueryHandler.handle(query);
-          frontend.display(result);
-        });
+        query ->
+            CompletableFuture.supplyAsync(() -> newestUserQueryHandler.handle(query))
+                .thenAcceptAsync(frontend::display, Platform::runLater));
     frontend.setOnPreferencesQuery(
-        query -> {
-          var result = preferencesQueryHandler.handle(query);
-          frontend.display(result);
-        });
+        query ->
+            CompletableFuture.supplyAsync(() -> preferencesQueryHandler.handle(query))
+                .thenAcceptAsync(frontend::display, Platform::runLater));
 
     frontend.run();
   }
