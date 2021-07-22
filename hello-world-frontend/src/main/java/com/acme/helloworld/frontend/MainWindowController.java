@@ -114,10 +114,15 @@ public class MainWindowController {
   }
 
   public void display(Failure failure) {
+    var index = failure.errorMessage().indexOf(": ");
+    var header = index == -1 ? null : failure.errorMessage().substring(0, index);
+    var content =
+        index == -1 ? failure.errorMessage() : failure.errorMessage().substring(index + 1);
+
     var alert = new Alert(AlertType.ERROR);
     alert.initOwner(stage);
-    alert.setHeaderText(null);
-    alert.setContentText(failure.errorMessage());
+    alert.setHeaderText(header);
+    alert.setContentText(content);
     alert.show();
   }
 
