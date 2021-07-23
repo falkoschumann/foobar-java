@@ -81,36 +81,34 @@ public class MainWindowController {
     onMainWindowBoundsQuery.accept(new MainWindowBoundsQuery());
     onPreferencesQuery.accept(new PreferencesQuery());
     onNewestUserQuery.accept(new NewestUserQuery());
-    stage.show();
   }
 
   public void display(MainWindowBoundsQueryResult result) {
-    if (Bounds.NULL.equals(result.bounds())) {
-      return;
+    System.out.println(result);
+    if (!Bounds.NULL.equals(result.bounds())) {
+      var x = result.bounds().x();
+      var y = result.bounds().y();
+      var width = result.bounds().width();
+      var height = result.bounds().height();
+      if (!Screen.getScreensForRectangle(x, y, width, height).isEmpty()) {
+        stage.setX(x);
+        stage.setY(y);
+        stage.setWidth(width);
+        stage.setHeight(height);
+      }
     }
-
-    var x = result.bounds().x();
-    var y = result.bounds().y();
-    var width = result.bounds().width();
-    var height = result.bounds().height();
-
-    if (Screen.getScreensForRectangle(x, y, width, height).isEmpty()) {
-      return;
-    }
-
-    stage.setX(x);
-    stage.setY(y);
-    stage.setWidth(width);
-    stage.setHeight(height);
+    stage.show();
   }
 
   public void display(PreferencesQueryResult result) {
+    System.out.println(result);
     model.setGreeting(result.greeting());
     preferencesController.display(result);
   }
 
   public void display(NewestUserQueryResult result) {
-    model.userAdded(result.user());
+    System.out.println(result);
+    model.setNewUser(result.user());
   }
 
   public void display(Failure failure) {

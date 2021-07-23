@@ -44,7 +44,7 @@ class MainWindowModelTests {
     model.setGreeting("Hello $user");
     model.setUserName("Alice");
 
-    model.userAdded(new User("Alice"));
+    model.setNewUser(new User("Alice"));
 
     assertAll(
         () -> assertEquals("Hello Alice", model.getUserGreeting(), "userGreeting"),

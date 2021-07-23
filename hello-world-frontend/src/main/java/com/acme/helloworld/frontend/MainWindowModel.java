@@ -6,17 +6,54 @@
 package com.acme.helloworld.frontend;
 
 import com.acme.helloworld.contract.data.User;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import lombok.Getter;
-import lombok.Setter;
 
 class MainWindowModel {
-  @Getter @Setter private String greeting;
+  private final StringProperty greeting =
+      new SimpleStringProperty() {
+        @Override
+        protected void invalidated() {
+          if (getNewUser() == null) {
+            return;
+          }
+
+          var s = getGreeting().replace("$user", getNewUser().name());
+          setUserGreeting(s);
+        }
+      };
+
+  private String getGreeting() {
+    return greeting.get();
+  }
+
+  final void setGreeting(String value) {
+    greeting.set(value);
+  }
+
+  private final ObjectProperty<User> newUser =
+      new SimpleObjectProperty<>() {
+        @Override
+        protected void invalidated() {
+          var s = getGreeting().replace("$user", getValue().name());
+          setUserGreeting(s);
+          setUserName("");
+        }
+      };
+
+  private User getNewUser() {
+    return newUser.get();
+  }
+
+  final void setNewUser(User value) {
+    newUser.set(value);
+  }
 
   private final ReadOnlyStringWrapper userGreeting = new ReadOnlyStringWrapper("Hello");
 
@@ -64,15 +101,5 @@ class MainWindowModel {
 
   final ReadOnlyBooleanProperty createUserDisabledProperty() {
     return createUserDisabled.getReadOnlyProperty();
-  }
-
-  void userAdded(User user) {
-    if (user == null) {
-      return;
-    }
-
-    var s = getGreeting().replace("$user", user.name());
-    setUserGreeting(s);
-    setUserName("");
   }
 }
