@@ -84,7 +84,6 @@ public class MainWindowController {
   }
 
   public void display(MainWindowBoundsQueryResult result) {
-    System.out.println(result);
     if (!Bounds.NULL.equals(result.bounds())) {
       var x = result.bounds().x();
       var y = result.bounds().y();
@@ -101,13 +100,11 @@ public class MainWindowController {
   }
 
   public void display(PreferencesQueryResult result) {
-    System.out.println(result);
     model.setGreeting(result.greeting());
     preferencesController.display(result);
   }
 
   public void display(NewestUserQueryResult result) {
-    System.out.println(result);
     model.setNewUser(result.user());
   }
 
