@@ -11,15 +11,6 @@ import com.acme.helloworld.backend.adapters.CsvEventStore;
 import com.acme.helloworld.backend.adapters.MemoryEventStore;
 import com.acme.helloworld.backend.adapters.MemoryPreferencesRepository;
 import com.acme.helloworld.backend.adapters.PrefsPreferencesRepository;
-import com.acme.helloworld.backend.messagehandlers.ChangeMainWindowBoundsCommandHandler;
-import com.acme.helloworld.backend.messagehandlers.ChangePreferencesCommandHandler;
-import com.acme.helloworld.backend.messagehandlers.CreateUserCommandHandler;
-import com.acme.helloworld.backend.messagehandlers.MainWindowBoundsQueryHandler;
-import com.acme.helloworld.backend.messagehandlers.NewestUserQueryHandler;
-import com.acme.helloworld.backend.messagehandlers.PreferencesQueryHandler;
-import com.acme.helloworld.contract.messages.commands.Failure;
-import com.acme.helloworld.contract.messages.queries.NewestUserQuery;
-import com.acme.helloworld.contract.messages.queries.PreferencesQuery;
 import com.acme.helloworld.frontend.MainWindowController;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
@@ -49,62 +40,52 @@ public class App extends Application {
 
   @Override
   public void start(Stage primaryStage) {
-    var changeMainWindowBoundsCommandHandler =
-        new ChangeMainWindowBoundsCommandHandler(preferencesRepository);
-    var changePreferencesCommandHandler =
-        new ChangePreferencesCommandHandler(preferencesRepository);
-    var createUserCommandHandler = new CreateUserCommandHandler(eventStore);
-    var mainWindowBoundsQueryHandler = new MainWindowBoundsQueryHandler(preferencesRepository);
-    var newestUserQueryHandler = new NewestUserQueryHandler(eventStore);
-    var preferencesQueryHandler = new PreferencesQueryHandler(preferencesRepository);
+    var requestHandler = new RequestHandler(eventStore, preferencesRepository);
     var frontend = MainWindowController.create(primaryStage);
 
-    frontend.setOnChangeMainWindowBoundsCommand(
-        commandProcessor(
-            changeMainWindowBoundsCommandHandler::handle, App::noOperation, frontend::display));
-    var preferencesQueryProcessor =
-        queryProcessor(preferencesQueryHandler::handle, frontend::display);
+    frontend.setOnChangeMainWindowBoundsCommand(handle(requestHandler::handle, frontend::display));
     frontend.setOnChangePreferencesCommand(
-        commandProcessor(
-            changePreferencesCommandHandler::handle,
-            () -> preferencesQueryProcessor.accept(new PreferencesQuery()),
-            frontend::display));
-    var newestUserQueryProcessor =
-        queryProcessor(newestUserQueryHandler::handle, frontend::display);
+        handle(requestHandler::handle, frontend::display, frontend::display));
     frontend.setOnCreateUserCommand(
-        commandProcessor(
-            createUserCommandHandler::handle,
-            () -> newestUserQueryProcessor.accept(new NewestUserQuery()),
-            frontend::display));
+        handle(requestHandler::handle, frontend::display, frontend::display));
     frontend.setOnMainWindowBoundsQuery(
-        queryProcessor(mainWindowBoundsQueryHandler::handle, frontend::display));
-    frontend.setOnNewestUserQuery(newestUserQueryProcessor);
-    frontend.setOnPreferencesQuery(preferencesQueryProcessor);
+        handle(requestHandler::handle, frontend::display, frontend::display));
+    frontend.setOnNewestUserQuery(
+        handle(requestHandler::handle, frontend::display, frontend::display));
+    frontend.setOnPreferencesQuery(
+        handle(requestHandler::handle, frontend::display, frontend::display));
 
     frontend.run();
   }
 
-  private static <C, S> Consumer<C> commandProcessor(
-      Function<C, S> commandHandler, Runnable onSuccess, Consumer<Failure> onFailure) {
-    return command ->
-        CompletableFuture.supplyAsync(() -> commandHandler.apply(command))
-            .thenAcceptAsync(
-                status -> {
-                  if (status instanceof Failure failure) {
-                    onFailure.accept(failure);
-                  } else {
-                    onSuccess.run();
-                  }
+  private static <I> Consumer<I> handle(
+      Function<I, CompletableFuture<Void>> handler, Consumer<Throwable> onError) {
+    return request ->
+        handler
+            .apply(request)
+            .exceptionallyAsync(
+                exception -> {
+                  onError.accept(exception);
+                  return null;
                 },
                 Platform::runLater);
   }
 
-  private static void noOperation() {}
-
-  private static <Q, R> Consumer<Q> queryProcessor(
-      Function<Q, R> queryHandler, Consumer<R> projector) {
-    return query ->
-        CompletableFuture.supplyAsync(() -> queryHandler.apply(query))
-            .thenAcceptAsync(projector, Platform::runLater);
+  private static <I, O> Consumer<I> handle(
+      Function<I, CompletableFuture<O>> handler,
+      Consumer<O> onSuccess,
+      Consumer<Throwable> onError) {
+    return request ->
+        handler
+            .apply(request)
+            .whenCompleteAsync(
+                (response, exception) -> {
+                  if (response != null) {
+                    onSuccess.accept(response);
+                  } else if (exception != null) {
+                    onError.accept(exception);
+                  }
+                },
+                Platform::runLater);
   }
 }

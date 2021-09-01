@@ -21,6 +21,6 @@ class PreferencesQueryHandlerTests {
 
     var result = handler.handle(new PreferencesQuery());
 
-    assertEquals(new PreferencesQueryResult("Hello $user"), result);
+    assertEquals(new PreferencesQueryResult("Konnichiwa $user"), result);
   }
 }

@@ -8,7 +8,6 @@ package com.acme.helloworld.backend.messagehandlers;
 import com.acme.helloworld.backend.PreferencesRepository;
 import com.acme.helloworld.contract.messages.commands.ChangeMainWindowBoundsCommand;
 import com.acme.helloworld.contract.messages.commands.CommandStatus;
-import com.acme.helloworld.contract.messages.commands.Failure;
 import com.acme.helloworld.contract.messages.commands.Success;
 
 public class ChangeMainWindowBoundsCommandHandler {
@@ -19,11 +18,7 @@ public class ChangeMainWindowBoundsCommandHandler {
   }
 
   public CommandStatus handle(ChangeMainWindowBoundsCommand command) {
-    try {
-      preferencesRepository.storeMainWindowBounds(command.bounds());
-      return new Success();
-    } catch (Exception e) {
-      return new Failure("Storing settings failed: " + e.getMessage());
-    }
+    preferencesRepository.storeMainWindowBounds(command.bounds());
+    return new Success();
   }
 }

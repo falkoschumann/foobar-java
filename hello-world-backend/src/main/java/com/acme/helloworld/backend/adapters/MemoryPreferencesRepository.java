@@ -9,11 +9,12 @@ import com.acme.helloworld.backend.PreferencesRepository;
 import com.acme.helloworld.contract.data.Bounds;
 
 public class MemoryPreferencesRepository implements PreferencesRepository {
-  private String greeting;
+  private String greeting = "Hello $user";
+  ;
   private Bounds mainWindowBounds = Bounds.NULL;
 
   public MemoryPreferencesRepository addExamples() {
-    greeting = "Hello $user";
+    greeting = "Konnichiwa $user";
     mainWindowBounds = new Bounds(36, 24, 640, 480);
     return this;
   }

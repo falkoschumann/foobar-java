@@ -9,7 +9,6 @@ import com.acme.helloworld.contract.data.Bounds;
 import com.acme.helloworld.contract.messages.commands.ChangeMainWindowBoundsCommand;
 import com.acme.helloworld.contract.messages.commands.ChangePreferencesCommand;
 import com.acme.helloworld.contract.messages.commands.CreateUserCommand;
-import com.acme.helloworld.contract.messages.commands.Failure;
 import com.acme.helloworld.contract.messages.queries.MainWindowBoundsQuery;
 import com.acme.helloworld.contract.messages.queries.MainWindowBoundsQueryResult;
 import com.acme.helloworld.contract.messages.queries.NewestUserQuery;
@@ -106,18 +105,25 @@ public class MainWindowController {
 
   public void display(NewestUserQueryResult result) {
     model.setNewUser(result.user());
+
+    if (result.failed()) {
+      var alert = new Alert(AlertType.WARNING);
+      alert.initOwner(stage);
+      alert.setTitle("Warning");
+      alert.setHeaderText("User not created");
+      alert.setContentText(result.errorMessage());
+      alert.show();
+    }
   }
 
-  public void display(Failure failure) {
-    var index = failure.errorMessage().indexOf(": ");
-    var header = index == -1 ? null : failure.errorMessage().substring(0, index);
-    var content =
-        index == -1 ? failure.errorMessage() : failure.errorMessage().substring(index + 1);
+  public void display(Throwable exception) {
+    exception.printStackTrace();
 
     var alert = new Alert(AlertType.ERROR);
     alert.initOwner(stage);
-    alert.setHeaderText(header);
-    alert.setContentText(content);
+    alert.setTitle("Error");
+    alert.setHeaderText("An unexpected Error occurred");
+    alert.setContentText(exception.getLocalizedMessage());
     alert.show();
   }
 
