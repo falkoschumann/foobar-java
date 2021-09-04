@@ -8,13 +8,12 @@ plugins {
 
 jlink {
   options = [
-    "--strip-native-commands", "" +
+    "--strip-native-commands",
     "--strip-debug",
     "--no-man-pages",
     "--no-header-files",
     "--compress", "2",
     "--include-locales", "en,de",
-    "--verbose",
   ]
   jpackage {
     imageOptions += [
@@ -22,7 +21,7 @@ jlink {
       "--vendor", "ACME Ltd.",
     ]
     installerOptions = [
-      "--license-file", "../LICENSE.txt",
+      "--license-file", "$rootDir/LICENSE.txt",
     ]
   }
 }
