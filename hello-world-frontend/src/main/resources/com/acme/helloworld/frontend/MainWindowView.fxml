@@ -46,10 +46,10 @@
                   </MenuBar>
                   <VBox spacing="16.0">
                      <children>
-                       <Label fx:id="greeting" styleClass="title" text="Hello" />
+                       <Label fx:id="greetingLabel" styleClass="title" text="Hello" />
                         <HBox alignment="CENTER_LEFT" spacing="8.0">
                            <children>
-                              <TextField fx:id="name" onAction="#handleCreateUser" promptText="Name" />
+                              <TextField fx:id="userNameText" onAction="#handleCreateUser" promptText="Name" />
                               <Button fx:id="createUserButton" mnemonicParsing="false" onAction="#handleCreateUser" text="Create user" />
                            </children>
                         </HBox>

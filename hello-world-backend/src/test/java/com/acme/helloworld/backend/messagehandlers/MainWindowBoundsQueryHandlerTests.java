@@ -22,6 +22,6 @@ class MainWindowBoundsQueryHandlerTests {
 
     var result = handler.handle(new MainWindowBoundsQuery());
 
-    assertEquals(new MainWindowBoundsQueryResult(new Bounds(36, 24, 640, 480)), result);
+    assertEquals(new MainWindowBoundsQueryResult(new Bounds(360, 240, 640, 480)), result);
   }
 }

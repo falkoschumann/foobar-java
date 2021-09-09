@@ -10,12 +10,12 @@ import com.acme.helloworld.contract.data.Bounds;
 
 public class MemoryPreferencesRepository implements PreferencesRepository {
   private String greeting = "Hello $user";
-  ;
+
   private Bounds mainWindowBounds = Bounds.NULL;
 
   public MemoryPreferencesRepository addExamples() {
     greeting = "Konnichiwa $user";
-    mainWindowBounds = new Bounds(36, 24, 640, 480);
+    mainWindowBounds = new Bounds(360, 240, 640, 480);
     return this;
   }
 

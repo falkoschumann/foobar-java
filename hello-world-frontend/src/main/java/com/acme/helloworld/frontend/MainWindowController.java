@@ -42,14 +42,14 @@ public class MainWindowController {
 
   @FXML private Stage stage;
   @FXML private MenuBar menuBar;
-  @FXML private Label greeting;
-  @FXML private TextField name;
+  @FXML private Label greetingLabel;
+  @FXML private TextField userNameText;
   @FXML private Button createUserButton;
 
   private PreferencesController preferencesController;
   private AboutController aboutController;
 
-  private MainWindowModel model;
+  private String greetingTemplate;
 
   public static MainWindowController create(Stage stage) {
     try {
@@ -66,14 +66,13 @@ public class MainWindowController {
 
   @FXML
   private void initialize() {
+    menuBar.setUseSystemMenuBar(true);
     preferencesController = PreferencesController.create(stage);
     aboutController = AboutController.create(stage);
-    menuBar.setUseSystemMenuBar(true);
-    model = new MainWindowModel();
 
-    greeting.textProperty().bind(model.userGreetingProperty());
-    name.textProperty().bindBidirectional(model.userNameProperty());
-    createUserButton.disableProperty().bind(model.createUserDisabledProperty());
+    userNameText
+        .textProperty()
+        .addListener(o -> createUserButton.setDisable(userNameText.getText().isBlank()));
   }
 
   public void run() {
@@ -99,12 +98,14 @@ public class MainWindowController {
   }
 
   public void display(PreferencesQueryResult result) {
-    model.setGreeting(result.greeting());
+    greetingTemplate = result.greeting();
     preferencesController.display(result);
   }
 
   public void display(NewestUserQueryResult result) {
-    model.setNewUser(result.user());
+    var greeting = greetingTemplate.replace("$user", result.user().name());
+    greetingLabel.setText(greeting);
+    userNameText.setText("");
 
     if (result.failed()) {
       var alert = new Alert(AlertType.WARNING);
@@ -148,10 +149,10 @@ public class MainWindowController {
 
   @FXML
   private void handleCreateUser() {
-    if (model.isCreateUserDisabled()) {
+    if (userNameText.isDisabled()) {
       return;
     }
 
-    onCreateUserCommand.accept(new CreateUserCommand(model.getUserName()));
+    onCreateUserCommand.accept(new CreateUserCommand(userNameText.getText()));
   }
 }
