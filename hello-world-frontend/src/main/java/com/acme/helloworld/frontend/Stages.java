@@ -12,17 +12,27 @@ import javafx.stage.Stage;
 public class Stages {
   private Stages() {}
 
-  public static void hookCloseHandler(Stage stage) {
-    hookCloseHandler(stage, stage::close);
+  public static void hookWindowCloseHandler(Stage stage) {
+    hookWindowCloseHandler(stage, stage::close);
   }
 
-  public static void hookCloseHandler(Stage stage, Runnable handler) {
+  public static void hookWindowCloseHandler(Stage stage, Runnable handler) {
     stage.addEventHandler(
         KeyEvent.KEY_RELEASED,
         e -> {
           if (e.isShortcutDown() && KeyCode.W == e.getCode()) {
             e.consume();
             handler.run();
+          }
+        });
+  }
+
+  public static void hookDialogCloseHandler(Stage stage) {
+    stage.addEventHandler(
+        KeyEvent.KEY_RELEASED,
+        e -> {
+          if (KeyCode.ESCAPE == e.getCode()) {
+            stage.close();
           }
         });
   }

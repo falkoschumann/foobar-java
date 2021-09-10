@@ -41,7 +41,7 @@ public class PreferencesController {
 
   @FXML
   private void initialize() {
-    Stages.hookCloseHandler(stage, this::handleClose);
+    Stages.hookWindowCloseHandler(stage, this::handleClose);
   }
 
   public void run() {
