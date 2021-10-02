@@ -1,27 +1,27 @@
 import org.apache.tools.ant.taskdefs.condition.Os
 
 plugins {
-  id "acme.java-common-conventions"
-  id "application"
-  id "org.beryx.jlink"
+  id 'acme.java-common-conventions'
+  id 'application'
+  id 'org.beryx.jlink'
 }
 
 jlink {
   options = [
-    "--strip-native-commands",
-    "--strip-debug",
-    "--no-man-pages",
-    "--no-header-files",
-    "--compress", "2",
-    "--include-locales", "en,de",
+    '--strip-native-commands',
+    '--strip-debug',
+    '--no-man-pages',
+    '--no-header-files',
+    '--compress', '2',
+    '--include-locales', 'en,de',
   ]
   jpackage {
     imageOptions += [
-      "--description", "Hello World is an example JavaFX app and template project.",
-      "--vendor", "ACME Ltd.",
+      '--description', 'Hello World is an example JavaFX app and template project.',
+      '--vendor', 'ACME Ltd.',
     ]
     installerOptions = [
-      "--license-file", "$rootDir/LICENSE.txt",
+      '--license-file', "$rootDir/LICENSE.txt",
     ]
   }
 }
@@ -29,14 +29,14 @@ jlink {
 if (Os.isFamily(Os.FAMILY_MAC)) {
   jlink {
     jpackage {
-      icon = "src/main/mac/app-icon.icns"
+      icon = 'src/main/mac/app-icon.icns'
       imageOptions += [
-        "--copyright", "Copyright © ${copyrightYear} ACME Ltd.",
-        "--mac-sign",
-        "--mac-signing-key-user-name", "Falko Schumann (QC6EN37P56)",
-        "--resource-dir", "$projectDir/src/main/mac",
+        '--copyright', "Copyright © ${copyrightYear} ACME Ltd.",
+        '--mac-sign',
+        '--mac-signing-key-user-name', 'Falko Schumann (QC6EN37P56)',
+        '--resource-dir', "$projectDir/src/main/mac",
       ]
-      installerType = "dmg"
+      installerType = 'dmg'
     }
   }
 }
@@ -44,16 +44,16 @@ if (Os.isFamily(Os.FAMILY_MAC)) {
 if (Os.isFamily(Os.FAMILY_WINDOWS)) {
   jlink {
     jpackage {
-      icon = "src/main/win/app-icon.ico"
+      icon = 'src/main/win/app-icon.ico'
       imageOptions = [
-        "--copyright", "Copyright (c) ${copyrightYear} ACME Ltd.",
-        "--resource-dir", "$projectDir/src/main/win",
+        '--copyright', "Copyright (c) ${copyrightYear} ACME Ltd.",
+        '--resource-dir', "$projectDir/src/main/win",
       ]
-      installerType = "msi"
+      installerType = 'msi'
       installerOptions = [
-        "--win-dir-chooser",
-        "--win-menu",
-        "--win-menu-group", "ACME Ltd.",
+        '--win-dir-chooser',
+        '--win-menu',
+        '--win-menu-group', 'ACME Ltd.',
       ]
     }
   }

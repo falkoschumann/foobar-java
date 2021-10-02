@@ -1,25 +1,25 @@
 import org.apache.tools.ant.taskdefs.condition.Os
 
 plugins {
-  id "acme.java-application-conventions"
-  id "acme.java-modules-conventions"
-  id "acme.java-openjfx-conventions"
+  id 'acme.java-application-conventions'
+  id 'acme.java-modules-conventions'
+  id 'acme.java-openjfx-conventions'
 }
 
 dependencies {
-  implementation project(":hello-world-frontend")
-  implementation project(":hello-world-backend")
+  implementation project(':hello-world-frontend')
+  implementation project(':hello-world-backend')
 }
 
 application {
-  mainModule = "com.acme.helloworld"
-  mainClass = "com.acme.helloworld.App"
+  mainModule = 'com.acme.helloworld'
+  mainClass = 'com.acme.helloworld.App'
 }
 
 jlink {
   jpackage {
     imageOptions += [
-      "--add-launcher", "Hello World Demo=$projectDir/src/main/demo/launcher.properties"
+      '--add-launcher', "Hello World Demo=$projectDir/src/main/demo/launcher.properties"
     ]
   }
 }
@@ -27,7 +27,7 @@ jlink {
 if (Os.isFamily(Os.FAMILY_MAC)) {
   jlink {
     jpackage {
-      imageName = "Hello World"
+      imageName = 'Hello World'
     }
   }
 }
@@ -35,10 +35,10 @@ if (Os.isFamily(Os.FAMILY_MAC)) {
 if (Os.isFamily(Os.FAMILY_WINDOWS)) {
   jlink {
     jpackage {
-      imageName = "Hello World"
-      installerName = "hello-world"
+      imageName = 'Hello World'
+      installerName = 'hello-world'
       installerOptions += [
-        "--win-upgrade-uuid", "be60334f-312d-42bd-9cba-cac6d2993dd6"
+        '--win-upgrade-uuid', 'be60334f-312d-42bd-9cba-cac6d2993dd6'
       ]
     }
   }
