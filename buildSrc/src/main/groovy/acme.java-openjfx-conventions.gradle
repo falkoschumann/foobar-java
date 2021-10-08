@@ -3,6 +3,6 @@ plugins {
 }
 
 javafx {
-  version = '16'
+  version = '17.0.0.1'
   modules 'javafx.controls', 'javafx.fxml'
 }
