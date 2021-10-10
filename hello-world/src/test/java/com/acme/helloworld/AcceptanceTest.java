@@ -7,7 +7,7 @@ package com.acme.helloworld;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.acme.helloworld.backend.adapters.MemoryEventStore;
+import com.acme.helloworld.backend.adapters.CsvEventStore;
 import com.acme.helloworld.backend.adapters.MemoryPreferencesRepository;
 import com.acme.helloworld.contract.data.Bounds;
 import com.acme.helloworld.contract.data.User;
@@ -20,6 +20,9 @@ import com.acme.helloworld.contract.messages.queries.NewestUserQuery;
 import com.acme.helloworld.contract.messages.queries.NewestUserQueryResult;
 import com.acme.helloworld.contract.messages.queries.PreferencesQuery;
 import com.acme.helloworld.contract.messages.queries.PreferencesQueryResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
@@ -32,12 +35,15 @@ import org.junit.jupiter.api.TestMethodOrder;
 @TestInstance(Lifecycle.PER_CLASS)
 @TestMethodOrder(OrderAnnotation.class)
 class AcceptanceTest {
+  private static final Path EVENT_STREAM_FILE = Paths.get("build/event-store/event-stream.csv");
+
   private static RequestHandler requestHandler;
 
   @BeforeAll
-  static void initAll() {
-    // TODO Teste gegen "richtigen" Event Store
-    var eventStore = new MemoryEventStore();
+  static void initAll() throws Exception {
+    Files.deleteIfExists(EVENT_STREAM_FILE);
+    Files.createDirectories(EVENT_STREAM_FILE.getParent());
+    var eventStore = new CsvEventStore(EVENT_STREAM_FILE);
     // TODO Teste gegen "richtigen" Preferences Repository
     var preferencesRepository = new MemoryPreferencesRepository();
     requestHandler = new RequestHandler(eventStore, preferencesRepository);

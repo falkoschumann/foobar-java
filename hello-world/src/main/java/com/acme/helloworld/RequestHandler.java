@@ -29,6 +29,7 @@ class RequestHandler {
   private final ChangeMainWindowBoundsCommandHandler changeMainWindowBoundsCommandHandler;
   private final ChangePreferencesCommandHandler changePreferencesCommandHandler;
   private final CreateUserCommandHandler createUserCommandHandler;
+
   private final MainWindowBoundsQueryHandler mainWindowBoundsQueryHandler;
   private final NewestUserQueryHandler newestUserQueryHandler;
   private final PreferencesQueryHandler preferencesQueryHandler;
@@ -38,21 +39,22 @@ class RequestHandler {
         new ChangeMainWindowBoundsCommandHandler(preferencesRepository);
     changePreferencesCommandHandler = new ChangePreferencesCommandHandler(preferencesRepository);
     createUserCommandHandler = new CreateUserCommandHandler(eventStore);
+
     mainWindowBoundsQueryHandler = new MainWindowBoundsQueryHandler(preferencesRepository);
     newestUserQueryHandler = new NewestUserQueryHandler(eventStore);
     preferencesQueryHandler = new PreferencesQueryHandler(preferencesRepository);
   }
 
-  public CompletableFuture<Void> handle(ChangeMainWindowBoundsCommand command) {
+  CompletableFuture<Void> handle(ChangeMainWindowBoundsCommand command) {
     return CompletableFuture.runAsync(() -> changeMainWindowBoundsCommandHandler.handle(command));
   }
 
-  public CompletableFuture<PreferencesQueryResult> handle(ChangePreferencesCommand command) {
+  CompletableFuture<PreferencesQueryResult> handle(ChangePreferencesCommand command) {
     return CompletableFuture.runAsync(() -> changePreferencesCommandHandler.handle(command))
         .thenApplyAsync(s -> preferencesQueryHandler.handle(new PreferencesQuery()));
   }
 
-  public CompletableFuture<NewestUserQueryResult> handle(CreateUserCommand command) {
+  CompletableFuture<NewestUserQueryResult> handle(CreateUserCommand command) {
     return CompletableFuture.supplyAsync(() -> createUserCommandHandler.handle(command))
         .thenApplyAsync(
             s -> {
@@ -62,15 +64,15 @@ class RequestHandler {
             });
   }
 
-  public CompletableFuture<MainWindowBoundsQueryResult> handle(MainWindowBoundsQuery query) {
+  CompletableFuture<MainWindowBoundsQueryResult> handle(MainWindowBoundsQuery query) {
     return CompletableFuture.supplyAsync(() -> mainWindowBoundsQueryHandler.handle(query));
   }
 
-  public CompletableFuture<PreferencesQueryResult> handle(PreferencesQuery query) {
+  CompletableFuture<PreferencesQueryResult> handle(PreferencesQuery query) {
     return CompletableFuture.supplyAsync(() -> preferencesQueryHandler.handle(query));
   }
 
-  public CompletableFuture<NewestUserQueryResult> handle(NewestUserQuery query) {
+  CompletableFuture<NewestUserQueryResult> handle(NewestUserQuery query) {
     return CompletableFuture.supplyAsync(() -> newestUserQueryHandler.handle(query));
   }
 }
