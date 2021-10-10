@@ -23,7 +23,6 @@ import com.acme.helloworld.contract.messages.queries.PreferencesQueryResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
@@ -51,65 +50,55 @@ class AcceptanceTest {
 
   @Test
   @Order(1)
-  void step1_InitialValues() throws Exception {
-    var mainWindowBoundsQueryResult =
-        requestHandler.handle(new MainWindowBoundsQuery()).get(2, TimeUnit.SECONDS);
+  void step1_InitialValues() {
+    var mainWindowBoundsQueryResult = requestHandler.handle(new MainWindowBoundsQuery());
     assertEquals(new MainWindowBoundsQueryResult(Bounds.NULL), mainWindowBoundsQueryResult);
 
-    var preferencesQueryResult =
-        requestHandler.handle(new PreferencesQuery()).get(2, TimeUnit.SECONDS);
+    var preferencesQueryResult = requestHandler.handle(new PreferencesQuery());
     assertEquals(new PreferencesQueryResult("Hello $user"), preferencesQueryResult);
 
-    var newestUserQueryResult =
-        requestHandler.handle(new NewestUserQuery()).get(2, TimeUnit.SECONDS);
+    var newestUserQueryResult = requestHandler.handle(new NewestUserQuery());
     assertEquals(new NewestUserQueryResult(null), newestUserQueryResult);
   }
 
   @Test
   @Order(2)
-  void step2_ChangeMainWindowBounds() throws Exception {
-    requestHandler
-        .handle(new ChangeMainWindowBoundsCommand(new Bounds(40, 60, 400, 600)))
-        .get(2, TimeUnit.SECONDS);
+  void step2_ChangeMainWindowBounds() {
+    requestHandler.handle(new ChangeMainWindowBoundsCommand(new Bounds(40, 60, 400, 600)));
 
-    var result = requestHandler.handle(new MainWindowBoundsQuery()).get(2, TimeUnit.SECONDS);
+    var result = requestHandler.handle(new MainWindowBoundsQuery());
     assertEquals(new MainWindowBoundsQueryResult(new Bounds(40, 60, 400, 600)), result);
   }
 
   @Test
   @Order(3)
-  void step3_ChangePreferences() throws Exception {
+  void step3_ChangePreferences() {
     var preferencesQueryResult =
-        requestHandler
-            .handle(new ChangePreferencesCommand("Konnichiwa $user"))
-            .get(2, TimeUnit.SECONDS);
+        requestHandler.handle(new ChangePreferencesCommand("Konnichiwa $user"));
 
     assertEquals(new PreferencesQueryResult("Konnichiwa $user"), preferencesQueryResult);
   }
 
   @Test
   @Order(4)
-  void step4_CreateUser_Alice() throws Exception {
-    var newestUserQueryResult =
-        requestHandler.handle(new CreateUserCommand("Alice")).get(2, TimeUnit.SECONDS);
+  void step4_CreateUser_Alice() {
+    var newestUserQueryResult = requestHandler.handle(new CreateUserCommand("Alice"));
 
     assertEquals(new NewestUserQueryResult(new User("Alice")), newestUserQueryResult);
   }
 
   @Test
   @Order(5)
-  void step5_CreateUser_Bob() throws Exception {
-    var newestUserQueryResult =
-        requestHandler.handle(new CreateUserCommand("Bob")).get(2, TimeUnit.SECONDS);
+  void step5_CreateUser_Bob() {
+    var newestUserQueryResult = requestHandler.handle(new CreateUserCommand("Bob"));
 
     assertEquals(new NewestUserQueryResult(new User("Bob")), newestUserQueryResult);
   }
 
   @Test
   @Order(6)
-  void step6_CreateUser_Alice() throws Exception {
-    var newestUserQueryResult =
-        requestHandler.handle(new CreateUserCommand("Alice")).get(2, TimeUnit.SECONDS);
+  void step6_CreateUser_Alice() {
+    var newestUserQueryResult = requestHandler.handle(new CreateUserCommand("Alice"));
 
     assertEquals(
         new NewestUserQueryResult(new User("Bob"), "User already exists."), newestUserQueryResult);

@@ -58,11 +58,9 @@ public class App extends Application {
     frontend.run();
   }
 
-  private static <I> Consumer<I> handle(
-      Function<I, CompletableFuture<Void>> handler, Consumer<Throwable> onError) {
+  private static <I> Consumer<I> handle(Consumer<I> handler, Consumer<Throwable> onError) {
     return request ->
-        handler
-            .apply(request)
+        CompletableFuture.runAsync(() -> handler.accept(request))
             .exceptionallyAsync(
                 exception -> {
                   onError.accept(exception);
@@ -72,12 +70,9 @@ public class App extends Application {
   }
 
   private static <I, O> Consumer<I> handle(
-      Function<I, CompletableFuture<O>> handler,
-      Consumer<O> onSuccess,
-      Consumer<Throwable> onError) {
+      Function<I, O> handler, Consumer<O> onSuccess, Consumer<Throwable> onError) {
     return request ->
-        handler
-            .apply(request)
+        CompletableFuture.supplyAsync(() -> handler.apply(request))
             .whenCompleteAsync(
                 (response, exception) -> {
                   if (response != null) {

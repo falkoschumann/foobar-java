@@ -23,7 +23,6 @@ import com.acme.helloworld.contract.messages.queries.NewestUserQuery;
 import com.acme.helloworld.contract.messages.queries.NewestUserQueryResult;
 import com.acme.helloworld.contract.messages.queries.PreferencesQuery;
 import com.acme.helloworld.contract.messages.queries.PreferencesQueryResult;
-import java.util.concurrent.CompletableFuture;
 
 class RequestHandler {
   private final ChangeMainWindowBoundsCommandHandler changeMainWindowBoundsCommandHandler;
@@ -45,34 +44,31 @@ class RequestHandler {
     preferencesQueryHandler = new PreferencesQueryHandler(preferencesRepository);
   }
 
-  CompletableFuture<Void> handle(ChangeMainWindowBoundsCommand command) {
-    return CompletableFuture.runAsync(() -> changeMainWindowBoundsCommandHandler.handle(command));
+  void handle(ChangeMainWindowBoundsCommand command) {
+    changeMainWindowBoundsCommandHandler.handle(command);
   }
 
-  CompletableFuture<PreferencesQueryResult> handle(ChangePreferencesCommand command) {
-    return CompletableFuture.runAsync(() -> changePreferencesCommandHandler.handle(command))
-        .thenApplyAsync(s -> preferencesQueryHandler.handle(new PreferencesQuery()));
+  PreferencesQueryResult handle(ChangePreferencesCommand command) {
+    changePreferencesCommandHandler.handle(command);
+    return preferencesQueryHandler.handle(new PreferencesQuery());
   }
 
-  CompletableFuture<NewestUserQueryResult> handle(CreateUserCommand command) {
-    return CompletableFuture.supplyAsync(() -> createUserCommandHandler.handle(command))
-        .thenApplyAsync(
-            s -> {
-              var errorMessage = (s instanceof Failure f) ? f.errorMessage() : null;
-              var result = newestUserQueryHandler.handle(new NewestUserQuery());
-              return new NewestUserQueryResult(result.user(), errorMessage);
-            });
+  NewestUserQueryResult handle(CreateUserCommand command) {
+    var status = createUserCommandHandler.handle(command);
+    var errorMessage = (status instanceof Failure f) ? f.errorMessage() : null;
+    var result = newestUserQueryHandler.handle(new NewestUserQuery());
+    return new NewestUserQueryResult(result.user(), errorMessage);
   }
 
-  CompletableFuture<MainWindowBoundsQueryResult> handle(MainWindowBoundsQuery query) {
-    return CompletableFuture.supplyAsync(() -> mainWindowBoundsQueryHandler.handle(query));
+  MainWindowBoundsQueryResult handle(MainWindowBoundsQuery query) {
+    return mainWindowBoundsQueryHandler.handle(query);
   }
 
-  CompletableFuture<PreferencesQueryResult> handle(PreferencesQuery query) {
-    return CompletableFuture.supplyAsync(() -> preferencesQueryHandler.handle(query));
+  PreferencesQueryResult handle(PreferencesQuery query) {
+    return preferencesQueryHandler.handle(query);
   }
 
-  CompletableFuture<NewestUserQueryResult> handle(NewestUserQuery query) {
-    return CompletableFuture.supplyAsync(() -> newestUserQueryHandler.handle(query));
+  NewestUserQueryResult handle(NewestUserQuery query) {
+    return newestUserQueryHandler.handle(query);
   }
 }
