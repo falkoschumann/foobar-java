@@ -58,7 +58,7 @@ class AcceptanceTest {
     assertEquals(new PreferencesQueryResult("Hello $user"), preferencesQueryResult);
 
     var newestUserQueryResult = requestHandler.handle(new NewestUserQuery());
-    assertEquals(new NewestUserQueryResult(null), newestUserQueryResult);
+    assertEquals(new NewestUserQueryResult(), newestUserQueryResult);
   }
 
   @Test

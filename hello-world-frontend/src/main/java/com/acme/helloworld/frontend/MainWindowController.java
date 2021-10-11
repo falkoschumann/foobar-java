@@ -49,7 +49,7 @@ public class MainWindowController {
   private PreferencesController preferencesController;
   private AboutController aboutController;
 
-  private String greetingTemplate;
+  private final MainWindowModel model = new MainWindowModel();
 
   public static MainWindowController create(Stage stage) {
     try {
@@ -70,9 +70,9 @@ public class MainWindowController {
     preferencesController = PreferencesController.create(stage);
     aboutController = AboutController.create(stage);
 
-    userNameText
-        .textProperty()
-        .addListener(o -> createUserButton.setDisable(userNameText.getText().isBlank()));
+    greetingLabel.textProperty().bind(model.greetingProperty());
+    userNameText.textProperty().bindBidirectional(model.userNameProperty());
+    createUserButton.disableProperty().bind(model.createUserButtonDisableProperty());
   }
 
   public void run() {
@@ -98,16 +98,14 @@ public class MainWindowController {
   }
 
   public void display(PreferencesQueryResult result) {
-    greetingTemplate = result.greeting();
+    model.updateGreetingTemplate(result.greeting());
     preferencesController.display(result);
   }
 
   public void display(NewestUserQueryResult result) {
-    var greeting = greetingTemplate.replace("$user", result.user().name());
-    greetingLabel.setText(greeting);
-    userNameText.setText("");
-
-    if (result.failed()) {
+    if (result.succeeded()) {
+      model.updateNewestUser(result.user());
+    } else {
       var alert = new Alert(AlertType.WARNING);
       alert.initOwner(stage);
       alert.setTitle("Warning");

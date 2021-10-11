@@ -54,6 +54,7 @@ public class PreferencesController {
 
   @FXML
   private void handleClose() {
+    // TODO Was ist, wenn greeting leer ist oder nicht $user enthält?
     onChangePreferencesCommand.accept(new ChangePreferencesCommand(greeting.getText()));
     stage.close();
   }
