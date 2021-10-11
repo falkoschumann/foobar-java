@@ -15,10 +15,13 @@ import com.acme.helloworld.frontend.MainWindowController;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.logging.Level;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
+import lombok.extern.java.Log;
 
+@Log
 public class App extends Application {
   private EventStore eventStore;
   private PreferencesRepository preferencesRepository;
@@ -40,20 +43,17 @@ public class App extends Application {
 
   @Override
   public void start(Stage primaryStage) {
-    var requestHandler = new RequestHandler(eventStore, preferencesRepository);
+    var backend = new RequestHandler(eventStore, preferencesRepository);
     var frontend = MainWindowController.create(primaryStage);
 
-    frontend.setOnChangeMainWindowBoundsCommand(handle(requestHandler::handle, frontend::display));
+    frontend.setOnChangeMainWindowBoundsCommand(handle(backend::handle, frontend::display));
     frontend.setOnChangePreferencesCommand(
-        handle(requestHandler::handle, frontend::display, frontend::display));
-    frontend.setOnCreateUserCommand(
-        handle(requestHandler::handle, frontend::display, frontend::display));
+        handle(backend::handle, frontend::display, frontend::display));
+    frontend.setOnCreateUserCommand(handle(backend::handle, frontend::display, frontend::display));
     frontend.setOnMainWindowBoundsQuery(
-        handle(requestHandler::handle, frontend::display, frontend::display));
-    frontend.setOnNewestUserQuery(
-        handle(requestHandler::handle, frontend::display, frontend::display));
-    frontend.setOnPreferencesQuery(
-        handle(requestHandler::handle, frontend::display, frontend::display));
+        handle(backend::handle, frontend::display, frontend::display));
+    frontend.setOnNewestUserQuery(handle(backend::handle, frontend::display, frontend::display));
+    frontend.setOnPreferencesQuery(handle(backend::handle, frontend::display, frontend::display));
 
     frontend.run();
   }
@@ -63,6 +63,7 @@ public class App extends Application {
         CompletableFuture.runAsync(() -> handler.accept(request))
             .exceptionallyAsync(
                 exception -> {
+                  logException(request, exception);
                   onError.accept(exception);
                   return null;
                 },
@@ -78,9 +79,14 @@ public class App extends Application {
                   if (response != null) {
                     onSuccess.accept(response);
                   } else if (exception != null) {
+                    logException(request, exception);
                     onError.accept(exception);
                   }
                 },
                 Platform::runLater);
+  }
+
+  private static <R> void logException(R request, Throwable exception) {
+    log.log(Level.SEVERE, exception, () -> "Request: " + request + "; Exception: " + exception);
   }
 }

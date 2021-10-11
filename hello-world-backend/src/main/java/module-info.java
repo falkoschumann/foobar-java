@@ -1,8 +1,8 @@
 module com.acme.helloworld.backend {
-  requires transitive com.acme.helloworld.contract;
   requires static lombok;
   requires org.apache.commons.csv;
   requires java.prefs;
+  requires transitive com.acme.helloworld.contract;
 
   exports com.acme.helloworld.backend;
   exports com.acme.helloworld.backend.adapters;
