@@ -6,9 +6,9 @@
 package com.acme.helloworld.backend.messagehandlers;
 
 import com.acme.helloworld.backend.PreferencesRepository;
+import com.acme.helloworld.contract.messages.CommandStatus;
+import com.acme.helloworld.contract.messages.Success;
 import com.acme.helloworld.contract.messages.commands.ChangeMainWindowBoundsCommand;
-import com.acme.helloworld.contract.messages.commands.CommandStatus;
-import com.acme.helloworld.contract.messages.commands.Success;
 
 public class ChangeMainWindowBoundsCommandHandler {
   private final PreferencesRepository preferencesRepository;

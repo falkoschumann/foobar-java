@@ -1,19 +1,18 @@
 /*
- * Hello World - Application
+ * Hello World - Backend
  * Copyright (c) 2021 ACME Ltd. <contact@acme.com>
  */
 
-package com.acme.helloworld;
+package com.acme.helloworld.backend;
 
-import com.acme.helloworld.backend.EventStore;
-import com.acme.helloworld.backend.PreferencesRepository;
 import com.acme.helloworld.backend.messagehandlers.ChangeMainWindowBoundsCommandHandler;
 import com.acme.helloworld.backend.messagehandlers.ChangePreferencesCommandHandler;
 import com.acme.helloworld.backend.messagehandlers.CreateUserCommandHandler;
 import com.acme.helloworld.backend.messagehandlers.MainWindowBoundsQueryHandler;
 import com.acme.helloworld.backend.messagehandlers.NewestUserQueryHandler;
 import com.acme.helloworld.backend.messagehandlers.PreferencesQueryHandler;
-import com.acme.helloworld.contract.messages.Failure;
+import com.acme.helloworld.contract.messages.CommandStatus;
+import com.acme.helloworld.contract.messages.MessageHandling;
 import com.acme.helloworld.contract.messages.commands.ChangeMainWindowBoundsCommand;
 import com.acme.helloworld.contract.messages.commands.ChangePreferencesCommand;
 import com.acme.helloworld.contract.messages.commands.CreateUserCommand;
@@ -24,8 +23,7 @@ import com.acme.helloworld.contract.messages.queries.NewestUserQueryResult;
 import com.acme.helloworld.contract.messages.queries.PreferencesQuery;
 import com.acme.helloworld.contract.messages.queries.PreferencesQueryResult;
 
-@Deprecated
-class RequestHandler {
+public class MessageHandler implements MessageHandling {
   private final ChangeMainWindowBoundsCommandHandler changeMainWindowBoundsCommandHandler;
   private final ChangePreferencesCommandHandler changePreferencesCommandHandler;
   private final CreateUserCommandHandler createUserCommandHandler;
@@ -33,7 +31,7 @@ class RequestHandler {
   private final NewestUserQueryHandler newestUserQueryHandler;
   private final PreferencesQueryHandler preferencesQueryHandler;
 
-  RequestHandler(EventStore eventStore, PreferencesRepository preferencesRepository) {
+  public MessageHandler(EventStore eventStore, PreferencesRepository preferencesRepository) {
     changeMainWindowBoundsCommandHandler =
         new ChangeMainWindowBoundsCommandHandler(preferencesRepository);
     changePreferencesCommandHandler = new ChangePreferencesCommandHandler(preferencesRepository);
@@ -43,31 +41,33 @@ class RequestHandler {
     preferencesQueryHandler = new PreferencesQueryHandler(preferencesRepository);
   }
 
-  void handle(ChangeMainWindowBoundsCommand command) {
-    changeMainWindowBoundsCommandHandler.handle(command);
+  @Override
+  public CommandStatus handle(ChangeMainWindowBoundsCommand command) {
+    return changeMainWindowBoundsCommandHandler.handle(command);
   }
 
-  PreferencesQueryResult handle(ChangePreferencesCommand command) {
-    changePreferencesCommandHandler.handle(command);
-    return preferencesQueryHandler.handle(new PreferencesQuery());
+  @Override
+  public CommandStatus handle(ChangePreferencesCommand command) {
+    return changePreferencesCommandHandler.handle(command);
   }
 
-  NewestUserQueryResult handle(CreateUserCommand command) {
-    var status = createUserCommandHandler.handle(command);
-    var errorMessage = (status instanceof Failure f) ? f.errorMessage() : null;
-    var result = newestUserQueryHandler.handle(new NewestUserQuery());
-    return new NewestUserQueryResult(result.user(), errorMessage);
+  @Override
+  public CommandStatus handle(CreateUserCommand command) {
+    return createUserCommandHandler.handle(command);
   }
 
-  MainWindowBoundsQueryResult handle(MainWindowBoundsQuery query) {
+  @Override
+  public MainWindowBoundsQueryResult handle(MainWindowBoundsQuery query) {
     return mainWindowBoundsQueryHandler.handle(query);
   }
 
-  PreferencesQueryResult handle(PreferencesQuery query) {
-    return preferencesQueryHandler.handle(query);
+  @Override
+  public NewestUserQueryResult handle(NewestUserQuery query) {
+    return newestUserQueryHandler.handle(query);
   }
 
-  NewestUserQueryResult handle(NewestUserQuery query) {
-    return newestUserQueryHandler.handle(query);
+  @Override
+  public PreferencesQueryResult handle(PreferencesQuery query) {
+    return preferencesQueryHandler.handle(query);
   }
 }

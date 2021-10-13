@@ -12,9 +12,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.acme.helloworld.backend.adapters.MemoryEventStore;
 import com.acme.helloworld.backend.events.UserCreatedEvent;
+import com.acme.helloworld.contract.messages.Failure;
+import com.acme.helloworld.contract.messages.Success;
 import com.acme.helloworld.contract.messages.commands.CreateUserCommand;
-import com.acme.helloworld.contract.messages.commands.Failure;
-import com.acme.helloworld.contract.messages.commands.Success;
 import java.time.Instant;
 import org.junit.jupiter.api.Test;
 

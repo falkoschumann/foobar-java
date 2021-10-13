@@ -32,7 +32,7 @@ public class PreferencesController {
       loader.load();
 
       var controller = (PreferencesController) loader.getController();
-      controller.stage.initOwner(owner);
+      // controller.stage.initOwner(owner);
       return controller;
     } catch (IOException e) {
       throw new UncheckedIOException(e);
@@ -42,6 +42,10 @@ public class PreferencesController {
   @FXML
   private void initialize() {
     Stages.hookWindowCloseHandler(stage, this::handleClose);
+  }
+
+  Stage getStage() {
+    return stage;
   }
 
   public void run() {

@@ -6,8 +6,9 @@
 package com.acme.helloworld.frontend;
 
 import com.acme.helloworld.contract.data.Bounds;
+import com.acme.helloworld.contract.messages.Failure;
+import com.acme.helloworld.contract.messages.MessageHandling;
 import com.acme.helloworld.contract.messages.commands.ChangeMainWindowBoundsCommand;
-import com.acme.helloworld.contract.messages.commands.ChangePreferencesCommand;
 import com.acme.helloworld.contract.messages.commands.CreateUserCommand;
 import com.acme.helloworld.contract.messages.queries.MainWindowBoundsQuery;
 import com.acme.helloworld.contract.messages.queries.MainWindowBoundsQueryResult;
@@ -18,7 +19,6 @@ import com.acme.helloworld.contract.messages.queries.PreferencesQueryResult;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.ResourceBundle;
-import java.util.function.Consumer;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
@@ -29,17 +29,8 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.TextField;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import lombok.Getter;
-import lombok.Setter;
 
 public class MainWindowController {
-  @Getter @Setter private Consumer<ChangeMainWindowBoundsCommand> onChangeMainWindowBoundsCommand;
-  @Getter @Setter private Consumer<ChangePreferencesCommand> onChangePreferencesCommand;
-  @Getter @Setter private Consumer<CreateUserCommand> onCreateUserCommand;
-  @Getter @Setter private Consumer<MainWindowBoundsQuery> onMainWindowBoundsQuery;
-  @Getter @Setter private Consumer<PreferencesQuery> onPreferencesQuery;
-  @Getter @Setter private Consumer<NewestUserQuery> onNewestUserQuery;
-
   @FXML private Stage stage;
   @FXML private MenuBar menuBar;
   @FXML private Label greetingLabel;
@@ -50,15 +41,19 @@ public class MainWindowController {
   private AboutController aboutController;
 
   private final MainWindowModel model = new MainWindowModel();
+  private MessageHandling messageHandling;
 
-  public static MainWindowController create(Stage stage) {
+  public static MainWindowController create(Stage stage, MessageHandling messageHandling) {
     try {
       var location = MainWindowController.class.getResource("MainWindowView.fxml");
       var resources = ResourceBundle.getBundle("HelloWorld");
       var loader = new FXMLLoader(location, resources);
       loader.setRoot(stage);
       loader.load();
-      return loader.getController();
+
+      var controller = (MainWindowController) loader.getController();
+      controller.messageHandling = messageHandling;
+      return controller;
     } catch (IOException e) {
       throw new UncheckedIOException(e);
     }
@@ -68,6 +63,9 @@ public class MainWindowController {
   private void initialize() {
     menuBar.setUseSystemMenuBar(true);
     preferencesController = PreferencesController.create(stage);
+    preferencesController
+        .getStage()
+        .setOnHidden(e -> display(messageHandling.handle(new PreferencesQuery())));
     aboutController = AboutController.create(stage);
 
     greetingLabel.textProperty().bind(model.greetingProperty());
@@ -76,9 +74,9 @@ public class MainWindowController {
   }
 
   public void run() {
-    onMainWindowBoundsQuery.accept(new MainWindowBoundsQuery());
-    onPreferencesQuery.accept(new PreferencesQuery());
-    onNewestUserQuery.accept(new NewestUserQuery());
+    display(messageHandling.handle(new MainWindowBoundsQuery()));
+    display(messageHandling.handle(new PreferencesQuery()));
+    display(messageHandling.handle(new NewestUserQuery()));
   }
 
   public void display(MainWindowBoundsQueryResult result) {
@@ -128,13 +126,13 @@ public class MainWindowController {
 
   @FXML
   private void handleShowPreferences() {
-    preferencesController.setOnChangePreferencesCommand(onChangePreferencesCommand);
+    preferencesController.setOnChangePreferencesCommand(messageHandling::handle);
     preferencesController.run();
   }
 
   @FXML
   private void handleClose() {
-    onChangeMainWindowBoundsCommand.accept(
+    messageHandling.handle(
         new ChangeMainWindowBoundsCommand(
             new Bounds(stage.getX(), stage.getY(), stage.getWidth(), stage.getHeight())));
     stage.close();
@@ -151,6 +149,9 @@ public class MainWindowController {
       return;
     }
 
-    onCreateUserCommand.accept(new CreateUserCommand(userNameText.getText()));
+    var status = messageHandling.handle(new CreateUserCommand(userNameText.getText()));
+    var errorMessage = (status instanceof Failure f) ? f.errorMessage() : null;
+    var result = messageHandling.handle(new NewestUserQuery());
+    display(new NewestUserQueryResult(result.user(), errorMessage));
   }
 }

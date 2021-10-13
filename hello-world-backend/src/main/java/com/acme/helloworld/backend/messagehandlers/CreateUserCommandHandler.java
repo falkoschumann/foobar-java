@@ -7,10 +7,10 @@ package com.acme.helloworld.backend.messagehandlers;
 
 import com.acme.helloworld.backend.EventStore;
 import com.acme.helloworld.backend.events.UserCreatedEvent;
-import com.acme.helloworld.contract.messages.commands.CommandStatus;
+import com.acme.helloworld.contract.messages.CommandStatus;
+import com.acme.helloworld.contract.messages.Failure;
+import com.acme.helloworld.contract.messages.Success;
 import com.acme.helloworld.contract.messages.commands.CreateUserCommand;
-import com.acme.helloworld.contract.messages.commands.Failure;
-import com.acme.helloworld.contract.messages.commands.Success;
 import java.util.LinkedHashSet;
 import java.util.Set;
 

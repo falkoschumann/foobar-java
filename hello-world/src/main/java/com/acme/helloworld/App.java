@@ -6,6 +6,7 @@
 package com.acme.helloworld;
 
 import com.acme.helloworld.backend.EventStore;
+import com.acme.helloworld.backend.MessageHandler;
 import com.acme.helloworld.backend.PreferencesRepository;
 import com.acme.helloworld.backend.adapters.CsvEventStore;
 import com.acme.helloworld.backend.adapters.MemoryEventStore;
@@ -43,18 +44,8 @@ public class App extends Application {
 
   @Override
   public void start(Stage primaryStage) {
-    var backend = new RequestHandler(eventStore, preferencesRepository);
-    var frontend = MainWindowController.create(primaryStage);
-
-    frontend.setOnChangeMainWindowBoundsCommand(handle(backend::handle, frontend::display));
-    frontend.setOnChangePreferencesCommand(
-        handle(backend::handle, frontend::display, frontend::display));
-    frontend.setOnCreateUserCommand(handle(backend::handle, frontend::display, frontend::display));
-    frontend.setOnMainWindowBoundsQuery(
-        handle(backend::handle, frontend::display, frontend::display));
-    frontend.setOnNewestUserQuery(handle(backend::handle, frontend::display, frontend::display));
-    frontend.setOnPreferencesQuery(handle(backend::handle, frontend::display, frontend::display));
-
+    var backend = new MessageHandler(eventStore, preferencesRepository);
+    var frontend = MainWindowController.create(primaryStage, backend);
     frontend.run();
   }
 
