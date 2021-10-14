@@ -1,6 +1,7 @@
 module com.acme.helloworld.backend {
   requires static lombok;
   requires org.apache.commons.csv;
+  requires java.logging;
   requires java.prefs;
   requires transitive com.acme.helloworld.contract;
 
