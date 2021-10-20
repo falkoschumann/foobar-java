@@ -20,10 +20,16 @@ public class CreateUserCommandHandler {
 
   public CreateUserCommandHandler(EventStore eventStore) {
     this.eventStore = eventStore;
+    replay(eventStore);
+    hookLisenter(eventStore);
+  }
 
+  private void replay(EventStore eventStore) {
     var names = eventStore.replay(UserCreatedEvent.class).map(UserCreatedEvent::name).toList();
     userNames.addAll(names);
+  }
 
+  private void hookLisenter(EventStore eventStore) {
     eventStore.addRecordedObserver(
         it -> {
           if (it instanceof UserCreatedEvent e) {

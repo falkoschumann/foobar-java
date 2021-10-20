@@ -5,26 +5,28 @@
 
 package com.acme.helloworld.frontend;
 
+import com.acme.helloworld.contract.messages.MessageHandling;
 import com.acme.helloworld.contract.messages.commands.ChangePreferencesCommand;
+import com.acme.helloworld.contract.messages.queries.PreferencesQuery;
 import com.acme.helloworld.contract.messages.queries.PreferencesQueryResult;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.ResourceBundle;
-import java.util.function.Consumer;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import lombok.Getter;
-import lombok.Setter;
 
 public class PreferencesController {
-  @Getter @Setter private Consumer<ChangePreferencesCommand> onChangePreferencesCommand;
-
   @FXML private Stage stage;
   @FXML private TextField greeting;
+  @FXML private Label greetingWarning;
 
-  public static PreferencesController create(Stage owner) {
+  private final PreferencesModel model = new PreferencesModel();
+  private MessageHandling messageHandling;
+
+  public static PreferencesController create(Stage owner, MessageHandling messageHandling) {
     try {
       var location = PreferencesController.class.getResource("PreferencesView.fxml");
       var resources = ResourceBundle.getBundle("HelloWorld");
@@ -32,7 +34,8 @@ public class PreferencesController {
       loader.load();
 
       var controller = (PreferencesController) loader.getController();
-      // controller.stage.initOwner(owner);
+      controller.stage.initOwner(owner);
+      controller.messageHandling = messageHandling;
       return controller;
     } catch (IOException e) {
       throw new UncheckedIOException(e);
@@ -41,25 +44,28 @@ public class PreferencesController {
 
   @FXML
   private void initialize() {
+    model.initGreetingWarningStyleClass(greetingWarning.getStyleClass());
+
+    greeting.textProperty().bindBidirectional(model.greetingProperty());
+    greeting
+        .textProperty()
+        .addListener(
+            it -> messageHandling.handle(new ChangePreferencesCommand(greeting.getText())));
+    greetingWarning.textProperty().bind(model.greetingWarningProperty());
     Stages.hookWindowCloseHandler(stage, this::handleClose);
   }
 
-  Stage getStage() {
-    return stage;
-  }
-
   public void run() {
+    display(messageHandling.handle(new PreferencesQuery()));
     stage.show();
   }
 
-  public void display(PreferencesQueryResult result) {
+  private void display(PreferencesQueryResult result) {
     greeting.setText(result.greeting());
   }
 
   @FXML
   private void handleClose() {
-    // TODO Was ist, wenn greeting leer ist oder nicht $user enthält?
-    onChangePreferencesCommand.accept(new ChangePreferencesCommand(greeting.getText()));
     stage.close();
   }
 }

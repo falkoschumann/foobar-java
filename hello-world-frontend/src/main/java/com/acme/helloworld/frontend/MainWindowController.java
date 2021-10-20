@@ -8,14 +8,13 @@ package com.acme.helloworld.frontend;
 import com.acme.helloworld.contract.data.Bounds;
 import com.acme.helloworld.contract.messages.Failure;
 import com.acme.helloworld.contract.messages.MessageHandling;
+import com.acme.helloworld.contract.messages.Success;
 import com.acme.helloworld.contract.messages.commands.ChangeMainWindowBoundsCommand;
 import com.acme.helloworld.contract.messages.commands.CreateUserCommand;
 import com.acme.helloworld.contract.messages.queries.MainWindowBoundsQuery;
 import com.acme.helloworld.contract.messages.queries.MainWindowBoundsQueryResult;
 import com.acme.helloworld.contract.messages.queries.NewestUserQuery;
 import com.acme.helloworld.contract.messages.queries.NewestUserQueryResult;
-import com.acme.helloworld.contract.messages.queries.PreferencesQuery;
-import com.acme.helloworld.contract.messages.queries.PreferencesQueryResult;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.ResourceBundle;
@@ -36,9 +35,6 @@ public class MainWindowController {
   @FXML private Label greetingLabel;
   @FXML private TextField userNameText;
   @FXML private Button createUserButton;
-
-  private PreferencesController preferencesController;
-  private AboutController aboutController;
 
   private final MainWindowModel model = new MainWindowModel();
   private MessageHandling messageHandling;
@@ -62,11 +58,6 @@ public class MainWindowController {
   @FXML
   private void initialize() {
     menuBar.setUseSystemMenuBar(true);
-    preferencesController = PreferencesController.create(stage);
-    preferencesController
-        .getStage()
-        .setOnHidden(e -> display(messageHandling.handle(new PreferencesQuery())));
-    aboutController = AboutController.create(stage);
 
     greetingLabel.textProperty().bind(model.greetingProperty());
     userNameText.textProperty().bindBidirectional(model.userNameProperty());
@@ -75,7 +66,6 @@ public class MainWindowController {
 
   public void run() {
     display(messageHandling.handle(new MainWindowBoundsQuery()));
-    display(messageHandling.handle(new PreferencesQuery()));
     display(messageHandling.handle(new NewestUserQuery()));
   }
 
@@ -95,22 +85,16 @@ public class MainWindowController {
     stage.show();
   }
 
-  public void display(PreferencesQueryResult result) {
-    model.updateGreetingTemplate(result.greeting());
-    preferencesController.display(result);
+  public void display(NewestUserQueryResult result) {
+    model.greetingProperty().set(result.greeting());
   }
 
-  public void display(NewestUserQueryResult result) {
-    if (result.succeeded()) {
-      model.updateNewestUser(result.user());
-    } else {
-      var alert = new Alert(AlertType.WARNING);
-      alert.initOwner(stage);
-      alert.setTitle("Warning");
-      alert.setHeaderText("User not created");
-      alert.setContentText(result.errorMessage());
-      alert.show();
-    }
+  public void display(Failure failure) {
+    var alert = new Alert(AlertType.ERROR);
+    alert.initOwner(stage);
+    alert.setTitle("Failure");
+    alert.setContentText(failure.errorMessage());
+    alert.show();
   }
 
   public void display(Throwable exception) {
@@ -126,7 +110,7 @@ public class MainWindowController {
 
   @FXML
   private void handleShowPreferences() {
-    preferencesController.setOnChangePreferencesCommand(messageHandling::handle);
+    var preferencesController = PreferencesController.create(stage, messageHandling);
     preferencesController.run();
   }
 
@@ -140,18 +124,21 @@ public class MainWindowController {
 
   @FXML
   private void handleShowAbout() {
-    aboutController.run();
+    var controller = AboutController.create(stage);
+    controller.run();
   }
 
   @FXML
   private void handleCreateUser() {
-    if (userNameText.isDisabled()) {
+    if (model.createUserButtonDisableProperty().get()) {
       return;
     }
 
-    var status = messageHandling.handle(new CreateUserCommand(userNameText.getText()));
-    var errorMessage = (status instanceof Failure f) ? f.errorMessage() : null;
-    var result = messageHandling.handle(new NewestUserQuery());
-    display(new NewestUserQueryResult(result.user(), errorMessage));
+    var status = messageHandling.handle(new CreateUserCommand(model.userNameProperty().get()));
+    if (status instanceof Success) {
+      display(messageHandling.handle(new NewestUserQuery()));
+    } else if (status instanceof Failure f) {
+      display(f);
+    }
   }
 }

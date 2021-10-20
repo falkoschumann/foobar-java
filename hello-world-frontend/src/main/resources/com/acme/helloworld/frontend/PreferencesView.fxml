@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.stage.Stage?>
 
-<Stage fx:id="stage" onCloseRequest="#handleClose" resizable="false" title="Preferences" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.acme.helloworld.frontend.PreferencesController">
+<Stage fx:id="stage" onCloseRequest="#handleClose" resizable="false" title="Preferences" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.acme.helloworld.frontend.PreferencesController">
    <scene>
       <Scene stylesheets="@style.css">
          <root>
@@ -22,11 +22,16 @@
                       <ColumnConstraints halignment="LEFT" hgrow="ALWAYS" />
                     </columnConstraints>
                     <rowConstraints>
-                      <RowConstraints valignment="CENTER" vgrow="SOMETIMES" />
+                      <RowConstraints valignment="BASELINE" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
                         <Label text="Greeting:" />
-                        <TextField fx:id="greeting" GridPane.columnIndex="1" />
+                        <VBox spacing="4.0" GridPane.columnIndex="1">
+                           <children>
+                              <TextField fx:id="greeting" promptText="Hello $user" />
+                              <Label fx:id="greetingWarning" styleClass="caption" text="Greeting template, the placeholder $user will be replaced with user name." />
+                           </children>
+                        </VBox>
                      </children>
                   </GridPane>
                </children>

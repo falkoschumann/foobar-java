@@ -10,7 +10,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.acme.helloworld.contract.data.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -24,13 +23,13 @@ class MainWindowModelTests {
   private static MainWindowModel model;
 
   @BeforeAll
-  static void initAll() throws Exception {
+  static void initAll() {
     model = new MainWindowModel();
   }
 
   @Test
   @Order(1)
-  void step1_InitialState() {
+  void step1InitialState() {
     assertAll(
         () -> assertEquals("", model.greetingProperty().get(), "greeting"),
         () -> assertEquals("", model.userNameProperty().get(), "userName"),
@@ -39,31 +38,20 @@ class MainWindowModelTests {
 
   @Test
   @Order(2)
-  void step2_UpdateGreetingTemplate() {
-    model.updateGreetingTemplate("Hello $user");
-
-    assertAll(
-        () -> assertEquals("Hello", model.greetingProperty().get(), "greeting"),
-        () -> assertEquals("", model.userNameProperty().get(), "userName"),
-        () -> assertTrue(model.createUserButtonDisableProperty().get(), "createUserButtonDisable"));
-  }
-
-  @Test
-  @Order(3)
-  void step3_EditUserName() {
+  void step2EditUserName() {
     model.userNameProperty().set("Alice");
 
     assertAll(
-        () -> assertEquals("Hello", model.greetingProperty().get(), "greeting"),
+        () -> assertEquals("", model.greetingProperty().get(), "greeting"),
         () -> assertEquals("Alice", model.userNameProperty().get(), "userName"),
         () ->
             assertFalse(model.createUserButtonDisableProperty().get(), "createUserButtonDisable"));
   }
 
   @Test
-  @Order(4)
-  void step4_UpdateNewestUser() {
-    model.updateNewestUser(new User("Alice"));
+  @Order(3)
+  void step3UpdateGreeting() {
+    model.greetingProperty().set("Hello Alice");
 
     assertAll(
         () -> assertEquals("Hello Alice", model.greetingProperty().get(), "greeting"),

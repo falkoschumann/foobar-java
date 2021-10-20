@@ -6,31 +6,44 @@
 package com.acme.helloworld.backend.messagehandlers;
 
 import com.acme.helloworld.backend.EventStore;
+import com.acme.helloworld.backend.PreferencesRepository;
 import com.acme.helloworld.backend.events.UserCreatedEvent;
-import com.acme.helloworld.contract.data.User;
 import com.acme.helloworld.contract.messages.queries.NewestUserQuery;
 import com.acme.helloworld.contract.messages.queries.NewestUserQueryResult;
 
 public class NewestUserQueryHandler {
-  private User newestUser;
+  private final PreferencesRepository preferencesRepository;
 
-  public NewestUserQueryHandler(EventStore eventStore) {
+  private String newestUser;
+
+  public NewestUserQueryHandler(
+      EventStore eventStore, PreferencesRepository preferencesRepository) {
+    this.preferencesRepository = preferencesRepository;
+    replay(eventStore);
+    hookListener(eventStore);
+  }
+
+  private void replay(EventStore eventStore) {
     newestUser =
         eventStore
             .replay(UserCreatedEvent.class)
             .reduce((first, second) -> second)
-            .map(it -> new User(it.name()))
+            .map(UserCreatedEvent::name)
             .orElse(null);
+  }
 
+  private void hookListener(EventStore eventStore) {
     eventStore.addRecordedObserver(
         it -> {
           if (it instanceof UserCreatedEvent e) {
-            newestUser = new User(e.name());
+            newestUser = e.name();
           }
         });
   }
 
   public NewestUserQueryResult handle(NewestUserQuery query) {
-    return new NewestUserQueryResult(newestUser);
+    var greeting = preferencesRepository.loadGreeting();
+    greeting = greeting.replace("$user", newestUser);
+    return new NewestUserQueryResult(greeting);
   }
 }

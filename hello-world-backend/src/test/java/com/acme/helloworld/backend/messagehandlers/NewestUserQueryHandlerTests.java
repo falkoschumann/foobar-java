@@ -8,7 +8,7 @@ package com.acme.helloworld.backend.messagehandlers;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.acme.helloworld.backend.adapters.MemoryEventStore;
-import com.acme.helloworld.contract.data.User;
+import com.acme.helloworld.backend.adapters.MemoryPreferencesRepository;
 import com.acme.helloworld.contract.messages.queries.NewestUserQuery;
 import com.acme.helloworld.contract.messages.queries.NewestUserQueryResult;
 import org.junit.jupiter.api.Test;
@@ -18,10 +18,12 @@ class NewestUserQueryHandlerTests {
   void testHandle() {
     var eventStore = new MemoryEventStore();
     eventStore.addExamples();
-    var handler = new NewestUserQueryHandler(eventStore);
+    var preferencesRepository = new MemoryPreferencesRepository();
+    preferencesRepository.addExamples();
+    var handler = new NewestUserQueryHandler(eventStore, preferencesRepository);
 
     var result = handler.handle(new NewestUserQuery());
 
-    assertEquals(new NewestUserQueryResult(new User("Alice")), result);
+    assertEquals(new NewestUserQueryResult("Konnichiwa Alice"), result);
   }
 }

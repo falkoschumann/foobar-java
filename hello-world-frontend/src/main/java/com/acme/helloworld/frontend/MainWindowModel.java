@@ -5,15 +5,28 @@
 
 package com.acme.helloworld.frontend;
 
-import com.acme.helloworld.contract.data.User;
-import javafx.beans.binding.BooleanExpression;
-import javafx.beans.binding.StringExpression;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 class MainWindowModel {
+  final StringProperty greetingProperty() {
+    return greeting;
+  }
+
+  private final StringProperty greeting =
+      new SimpleStringProperty("") {
+        @Override
+        protected void invalidated() {
+          userName.set("");
+        }
+      };
+
+  final StringProperty userNameProperty() {
+    return userName;
+  }
+
   private final StringProperty userName =
       new SimpleStringProperty("") {
         @Override
@@ -22,33 +35,9 @@ class MainWindowModel {
         }
       };
 
-  StringProperty userNameProperty() {
-    return userName;
+  final ReadOnlyBooleanProperty createUserButtonDisableProperty() {
+    return createUserButtonDisable.getReadOnlyProperty();
   }
 
-  private final BooleanProperty createUserButtonDisable = new SimpleBooleanProperty(true);
-
-  BooleanExpression createUserButtonDisableProperty() {
-    return createUserButtonDisable;
-  }
-
-  private final StringProperty greeting = new SimpleStringProperty("");
-
-  StringExpression greetingProperty() {
-    return greeting;
-  }
-
-  private String greetingTemplate;
-
-  void updateGreetingTemplate(String template) {
-    greetingTemplate = template;
-    String baseGreeting = template.replace("$user", "").strip();
-    greeting.set(baseGreeting);
-  }
-
-  void updateNewestUser(User user) {
-    String s = greetingTemplate.replace("$user", user.name());
-    greeting.set(s);
-    userName.set("");
-  }
+  private final ReadOnlyBooleanWrapper createUserButtonDisable = new ReadOnlyBooleanWrapper(true);
 }

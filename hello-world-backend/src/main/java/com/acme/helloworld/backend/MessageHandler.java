@@ -37,7 +37,7 @@ public class MessageHandler implements MessageHandling {
     changePreferencesCommandHandler = new ChangePreferencesCommandHandler(preferencesRepository);
     createUserCommandHandler = new CreateUserCommandHandler(eventStore);
     mainWindowBoundsQueryHandler = new MainWindowBoundsQueryHandler(preferencesRepository);
-    newestUserQueryHandler = new NewestUserQueryHandler(eventStore);
+    newestUserQueryHandler = new NewestUserQueryHandler(eventStore, preferencesRepository);
     preferencesQueryHandler = new PreferencesQueryHandler(preferencesRepository);
   }
 
