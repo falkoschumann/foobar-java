@@ -18,6 +18,7 @@ import com.acme.helloworld.contract.messages.queries.NewestUserQueryResult;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
@@ -66,10 +67,14 @@ public class MainWindowController {
 
   public void run() {
     display(messageHandling.handle(new MainWindowBoundsQuery()));
-    display(messageHandling.handle(new NewestUserQuery()));
+    Request.runAsync(
+        () -> {
+          var result = messageHandling.handle(new NewestUserQuery());
+          Platform.runLater(() -> display(result));
+        });
   }
 
-  public void display(MainWindowBoundsQueryResult result) {
+  private void display(MainWindowBoundsQueryResult result) {
     if (!Bounds.NULL.equals(result.bounds())) {
       var x = result.bounds().x();
       var y = result.bounds().y();
@@ -85,26 +90,14 @@ public class MainWindowController {
     stage.show();
   }
 
-  public void display(NewestUserQueryResult result) {
+  private void display(NewestUserQueryResult result) {
     model.greetingProperty().set(result.greeting());
   }
 
-  public void display(Failure failure) {
-    var alert = new Alert(AlertType.ERROR);
-    alert.initOwner(stage);
+  private void display(Failure failure) {
+    var alert = new Alert(AlertType.WARNING);
     alert.setTitle("Failure");
     alert.setContentText(failure.errorMessage());
-    alert.show();
-  }
-
-  public void display(Throwable exception) {
-    exception.printStackTrace();
-
-    var alert = new Alert(AlertType.ERROR);
-    alert.initOwner(stage);
-    alert.setTitle("Error");
-    alert.setHeaderText("An unexpected Error occurred");
-    alert.setContentText(exception.getLocalizedMessage());
     alert.show();
   }
 
@@ -134,11 +127,16 @@ public class MainWindowController {
       return;
     }
 
-    var status = messageHandling.handle(new CreateUserCommand(model.userNameProperty().get()));
-    if (status instanceof Success) {
-      display(messageHandling.handle(new NewestUserQuery()));
-    } else if (status instanceof Failure f) {
-      display(f);
-    }
+    Request.runAsync(
+        () -> {
+          var status =
+              messageHandling.handle(new CreateUserCommand(model.userNameProperty().get()));
+          if (status instanceof Success) {
+            var result = messageHandling.handle(new NewestUserQuery());
+            Platform.runLater(() -> display(result));
+          } else if (status instanceof Failure f) {
+            Platform.runLater(() -> display(f));
+          }
+        });
   }
 }
