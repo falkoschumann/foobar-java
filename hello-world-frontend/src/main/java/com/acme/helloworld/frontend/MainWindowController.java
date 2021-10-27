@@ -5,12 +5,12 @@
 
 package com.acme.helloworld.frontend;
 
+import com.acme.helloworld.contract.MessageHandling;
 import com.acme.helloworld.contract.data.Bounds;
-import com.acme.helloworld.contract.messages.Failure;
-import com.acme.helloworld.contract.messages.MessageHandling;
-import com.acme.helloworld.contract.messages.Success;
 import com.acme.helloworld.contract.messages.commands.ChangeMainWindowBoundsCommand;
 import com.acme.helloworld.contract.messages.commands.CreateUserCommand;
+import com.acme.helloworld.contract.messages.commands.Failure;
+import com.acme.helloworld.contract.messages.commands.Success;
 import com.acme.helloworld.contract.messages.queries.MainWindowBoundsQuery;
 import com.acme.helloworld.contract.messages.queries.MainWindowBoundsQueryResult;
 import com.acme.helloworld.contract.messages.queries.NewestUserQuery;
@@ -58,8 +58,10 @@ public class MainWindowController {
 
   @FXML
   private void initialize() {
+    // Build
     menuBar.setUseSystemMenuBar(true);
 
+    // Bind
     greetingLabel.textProperty().bind(model.greetingProperty());
     userNameText.textProperty().bindBidirectional(model.userNameProperty());
     createUserButton.disableProperty().bind(model.createUserButtonDisableProperty());

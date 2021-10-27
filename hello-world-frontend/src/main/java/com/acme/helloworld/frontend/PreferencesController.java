@@ -5,7 +5,7 @@
 
 package com.acme.helloworld.frontend;
 
-import com.acme.helloworld.contract.messages.MessageHandling;
+import com.acme.helloworld.contract.MessageHandling;
 import com.acme.helloworld.contract.messages.commands.ChangePreferencesCommand;
 import com.acme.helloworld.contract.messages.queries.PreferencesQuery;
 import com.acme.helloworld.contract.messages.queries.PreferencesQueryResult;
@@ -44,8 +44,10 @@ public class PreferencesController {
 
   @FXML
   private void initialize() {
+    // Build
     model.initGreetingWarningStyleClass(greetingWarning.getStyleClass());
 
+    // Bind
     greeting.textProperty().bindBidirectional(model.greetingProperty());
     greeting
         .textProperty()

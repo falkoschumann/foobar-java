@@ -5,10 +5,10 @@
 
 package com.acme.helloworld.backend;
 
-import com.acme.helloworld.contract.messages.CommandStatus;
-import com.acme.helloworld.contract.messages.MessageHandling;
+import com.acme.helloworld.contract.MessageHandling;
 import com.acme.helloworld.contract.messages.commands.ChangeMainWindowBoundsCommand;
 import com.acme.helloworld.contract.messages.commands.ChangePreferencesCommand;
+import com.acme.helloworld.contract.messages.commands.CommandStatus;
 import com.acme.helloworld.contract.messages.commands.CreateUserCommand;
 import com.acme.helloworld.contract.messages.queries.MainWindowBoundsQuery;
 import com.acme.helloworld.contract.messages.queries.MainWindowBoundsQueryResult;

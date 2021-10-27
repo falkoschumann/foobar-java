@@ -8,8 +8,8 @@ package com.acme.helloworld.backend.messagehandlers;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.acme.helloworld.backend.adapters.MemoryPreferencesRepository;
-import com.acme.helloworld.contract.messages.Success;
 import com.acme.helloworld.contract.messages.commands.ChangePreferencesCommand;
+import com.acme.helloworld.contract.messages.commands.Success;
 import org.junit.jupiter.api.Test;
 
 class ChangePreferencesCommandHandlerTests {
