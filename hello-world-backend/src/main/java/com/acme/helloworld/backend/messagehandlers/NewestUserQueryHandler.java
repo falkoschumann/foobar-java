@@ -29,7 +29,7 @@ public class NewestUserQueryHandler {
             .replay(UserCreatedEvent.class)
             .reduce((first, second) -> second)
             .map(UserCreatedEvent::name)
-            .orElse(null);
+            .orElse("");
   }
 
   private void hookListener(EventStore eventStore) {

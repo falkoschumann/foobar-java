@@ -9,9 +9,9 @@ import com.acme.helloworld.backend.EventStore;
 import com.acme.helloworld.backend.LoggingMessageHandler;
 import com.acme.helloworld.backend.MessageHandler;
 import com.acme.helloworld.backend.PreferencesRepository;
-import com.acme.helloworld.backend.adapters.CsvEventStore;
 import com.acme.helloworld.backend.adapters.MemoryEventStore;
 import com.acme.helloworld.backend.adapters.MemoryPreferencesRepository;
+import com.acme.helloworld.backend.adapters.NdjsonEventStore;
 import com.acme.helloworld.backend.adapters.PrefsPreferencesRepository;
 import com.acme.helloworld.frontend.MainWindowController;
 import javafx.application.Application;
@@ -39,7 +39,7 @@ public class App extends Application {
   }
 
   private void initDefault() {
-    eventStore = new CsvEventStore();
+    eventStore = new NdjsonEventStore();
     preferencesRepository = new PrefsPreferencesRepository();
   }
 
