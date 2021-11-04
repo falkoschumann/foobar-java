@@ -69,11 +69,7 @@ public class MainWindowController {
 
   public void run() {
     display(messageHandling.handle(new MainWindowBoundsQuery()));
-    Request.runAsync(
-        () -> {
-          var result = messageHandling.handle(new NewestUserQuery());
-          Platform.runLater(() -> display(result));
-        });
+    Request.runAsync(() -> messageHandling.handle(new NewestUserQuery()), this::display);
   }
 
   private void display(MainWindowBoundsQueryResult result) {
@@ -93,7 +89,7 @@ public class MainWindowController {
   }
 
   private void display(NewestUserQueryResult result) {
-    model.greetingProperty().set(result.greeting());
+    model.setGreeting(result.greeting());
   }
 
   private void display(Failure failure) {
@@ -125,14 +121,13 @@ public class MainWindowController {
 
   @FXML
   private void handleCreateUser() {
-    if (model.createUserButtonDisableProperty().get()) {
+    if (model.isCreateUserButtonDisable()) {
       return;
     }
 
     Request.runAsync(
         () -> {
-          var status =
-              messageHandling.handle(new CreateUserCommand(model.userNameProperty().get()));
+          var status = messageHandling.handle(new CreateUserCommand(model.getUserName()));
           if (status instanceof Success) {
             var result = messageHandling.handle(new NewestUserQuery());
             Platform.runLater(() -> display(result));

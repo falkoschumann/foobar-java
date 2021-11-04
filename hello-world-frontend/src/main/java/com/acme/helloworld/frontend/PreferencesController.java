@@ -63,7 +63,7 @@ public class PreferencesController {
   }
 
   private void display(PreferencesQueryResult result) {
-    greeting.setText(result.greeting());
+    model.setGreeting(result.greeting());
   }
 
   @FXML

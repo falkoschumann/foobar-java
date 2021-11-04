@@ -12,17 +12,11 @@ import javafx.collections.ObservableList;
 class PreferencesModel {
   private ObservableList<String> greetingWarningStyleClass;
 
-  // region Constructors
-
   void initGreetingWarningStyleClass(ObservableList<String> list) {
     this.greetingWarningStyleClass = list;
   }
 
-  // endregion
-
-  // region Properties
-
-  public StringProperty greetingProperty() {
+  final StringProperty greetingProperty() {
     return greeting;
   }
 
@@ -44,15 +38,15 @@ class PreferencesModel {
         }
       };
 
-  public StringProperty greetingWarningProperty() {
+  final void setGreeting(String value) {
+    greeting.set(value);
+  }
+
+  final StringProperty greetingWarningProperty() {
     return greetingWarning;
   }
 
   private final StringProperty greetingWarning = new SimpleStringProperty("");
-
-  // endregion
-
-  // region Methods
 
   private void addClass(ObservableList<String> styleClass, String className) {
     if (styleClass.contains(className)) {
@@ -65,6 +59,4 @@ class PreferencesModel {
   private void removeClass(ObservableList<String> styleClass, String className) {
     styleClass.remove(className);
   }
-
-  // endregion
 }

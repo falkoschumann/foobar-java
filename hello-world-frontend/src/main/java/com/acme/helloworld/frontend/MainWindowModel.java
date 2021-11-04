@@ -23,6 +23,10 @@ class MainWindowModel {
         }
       };
 
+  final void setGreeting(String value) {
+    greeting.set(value);
+  }
+
   final StringProperty userNameProperty() {
     return userName;
   }
@@ -35,9 +39,17 @@ class MainWindowModel {
         }
       };
 
+  final String getUserName() {
+    return userName.get();
+  }
+
   final ReadOnlyBooleanProperty createUserButtonDisableProperty() {
     return createUserButtonDisable.getReadOnlyProperty();
   }
 
   private final ReadOnlyBooleanWrapper createUserButtonDisable = new ReadOnlyBooleanWrapper(true);
+
+  final boolean isCreateUserButtonDisable() {
+    return createUserButtonDisable.get();
+  }
 }

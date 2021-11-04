@@ -4,7 +4,7 @@ plugins {
   id 'java-library'
 }
 
-def javafxVersion = '17.0.0.1'
+def javafxVersion = '17.0.1'
 def javafxModules = ['base', 'graphics', 'controls', 'fxml']
 
 def javafxPlatform = Os.isFamily(Os.FAMILY_MAC) ? 'mac' :
