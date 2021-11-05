@@ -72,33 +72,6 @@ public class MainWindowController {
     Request.runAsync(() -> messageHandling.handle(new NewestUserQuery()), this::display);
   }
 
-  private void display(MainWindowBoundsQueryResult result) {
-    if (!Bounds.NULL.equals(result.bounds())) {
-      var x = result.bounds().x();
-      var y = result.bounds().y();
-      var width = result.bounds().width();
-      var height = result.bounds().height();
-      if (!Screen.getScreensForRectangle(x, y, width, height).isEmpty()) {
-        stage.setX(x);
-        stage.setY(y);
-        stage.setWidth(width);
-        stage.setHeight(height);
-      }
-    }
-    stage.show();
-  }
-
-  private void display(NewestUserQueryResult result) {
-    model.setGreeting(result.greeting());
-  }
-
-  private void display(Failure failure) {
-    var alert = new Alert(AlertType.WARNING);
-    alert.setTitle("Failure");
-    alert.setContentText(failure.errorMessage());
-    alert.show();
-  }
-
   @FXML
   private void handleShowPreferences() {
     var preferencesController = PreferencesController.create(stage, messageHandling);
@@ -135,5 +108,32 @@ public class MainWindowController {
             Platform.runLater(() -> display(f));
           }
         });
+  }
+
+  private void display(MainWindowBoundsQueryResult result) {
+    if (!Bounds.NULL.equals(result.bounds())) {
+      var x = result.bounds().x();
+      var y = result.bounds().y();
+      var width = result.bounds().width();
+      var height = result.bounds().height();
+      if (!Screen.getScreensForRectangle(x, y, width, height).isEmpty()) {
+        stage.setX(x);
+        stage.setY(y);
+        stage.setWidth(width);
+        stage.setHeight(height);
+      }
+    }
+    stage.show();
+  }
+
+  private void display(NewestUserQueryResult result) {
+    model.setGreeting(result.greeting());
+  }
+
+  private void display(Failure failure) {
+    var alert = new Alert(AlertType.WARNING);
+    alert.setTitle("Failure");
+    alert.setContentText(failure.errorMessage());
+    alert.show();
   }
 }

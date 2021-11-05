@@ -62,12 +62,12 @@ public class PreferencesController {
     stage.show();
   }
 
-  private void display(PreferencesQueryResult result) {
-    model.setGreeting(result.greeting());
-  }
-
   @FXML
   private void handleClose() {
     stage.close();
+  }
+
+  private void display(PreferencesQueryResult result) {
+    model.setGreeting(result.greeting());
   }
 }
