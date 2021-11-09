@@ -5,4 +5,5 @@
 
 package com.acme.helloworld.contract.messages.commands;
 
-public sealed interface CommandStatus permits Success, Failure {}
+// public sealed interface CommandStatus permits Success, Failure {}
+public interface CommandStatus {}
