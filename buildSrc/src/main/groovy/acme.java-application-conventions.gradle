@@ -1,14 +1,14 @@
 import org.apache.tools.ant.taskdefs.condition.Os
 
 plugins {
-  id 'acme.java-common-conventions'
   id 'application'
   id 'org.beryx.jlink'
+  id 'acme.java-common-conventions'
 }
 
 jlink {
   options = [
-    '--strip-native-commands',
+    //'--strip-native-commands',
     '--strip-debug',
     '--no-man-pages',
     '--no-header-files',
@@ -24,17 +24,20 @@ jlink {
       '--license-file', "$rootDir/LICENSE.txt",
     ]
   }
+  mergedModule {
+    excludeRequires 'java.sql'
+  }
 }
 
 if (Os.isFamily(Os.FAMILY_MAC)) {
   jlink {
     jpackage {
-      icon = 'src/main/mac/app-icon.icns'
+      icon = "$projectDir/src/main/mac/app-icon.icns"
       imageOptions += [
         '--copyright', "Copyright © ${copyrightYear} ACME Ltd.",
+        '--resource-dir', "$projectDir/src/main/mac",
         '--mac-sign',
         '--mac-signing-key-user-name', 'Falko Schumann (QC6EN37P56)',
-        '--resource-dir', "$projectDir/src/main/mac",
       ]
       installerType = 'dmg'
     }
@@ -44,7 +47,7 @@ if (Os.isFamily(Os.FAMILY_MAC)) {
 if (Os.isFamily(Os.FAMILY_WINDOWS)) {
   jlink {
     jpackage {
-      icon = 'src/main/win/app-icon.ico'
+      icon = "$projectDir/src/main/win/app-icon.ico"
       imageOptions = [
         '--copyright', "Copyright (c) ${copyrightYear} ACME Ltd.",
         '--resource-dir', "$projectDir/src/main/win",

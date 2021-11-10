@@ -1,4 +1,4 @@
 plugins {
-  id 'acme.java-common-conventions'
   id 'java-library'
+  id 'acme.java-common-conventions'
 }
