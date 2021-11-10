@@ -8,7 +8,7 @@ plugins {
 
 jlink {
   options = [
-    //'--strip-native-commands',
+    '--strip-native-commands',
     '--strip-debug',
     '--no-man-pages',
     '--no-header-files',
