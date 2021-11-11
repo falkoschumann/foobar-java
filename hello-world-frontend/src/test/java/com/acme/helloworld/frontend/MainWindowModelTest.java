@@ -19,7 +19,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class MainWindowModelTests {
+class MainWindowModelTest {
   private static MainWindowModel model;
 
   @BeforeAll
@@ -29,7 +29,7 @@ class MainWindowModelTests {
 
   @Test
   @Order(1)
-  void step1InitialState() {
+  void step1_initialState() {
     assertAll(
         () -> assertEquals("", model.greetingProperty().get(), "greeting"),
         () -> assertEquals("", model.userNameProperty().get(), "userName"),
@@ -38,7 +38,7 @@ class MainWindowModelTests {
 
   @Test
   @Order(2)
-  void step2EditUserName() {
+  void step2_editUserName() {
     model.userNameProperty().set("Alice");
 
     assertAll(
@@ -50,7 +50,7 @@ class MainWindowModelTests {
 
   @Test
   @Order(3)
-  void step3UpdateGreeting() {
+  void step3_updateGreeting() {
     model.greetingProperty().set("Hello Alice");
 
     assertAll(

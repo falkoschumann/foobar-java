@@ -13,9 +13,9 @@ import com.acme.helloworld.contract.messages.queries.NewestUserQuery;
 import com.acme.helloworld.contract.messages.queries.NewestUserQueryResult;
 import org.junit.jupiter.api.Test;
 
-class NewestUserQueryHandlerTests {
+class NewestUserQueryHandlerTest {
   @Test
-  void testHandle() {
+  void handle_success() {
     var eventStore = new MemoryEventStore();
     eventStore.addExamples();
     var preferencesRepository = new MemoryPreferencesRepository();

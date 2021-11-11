@@ -13,9 +13,9 @@ import com.acme.helloworld.contract.messages.queries.MainWindowBoundsQuery;
 import com.acme.helloworld.contract.messages.queries.MainWindowBoundsQueryResult;
 import org.junit.jupiter.api.Test;
 
-class MainWindowBoundsQueryHandlerTests {
+class MainWindowBoundsQueryHandlerTest {
   @Test
-  void testHandle() {
+  void handle_success() {
     var repository = new MemoryPreferencesRepository();
     repository.addExamples();
     var handler = new MainWindowBoundsQueryHandler(repository);

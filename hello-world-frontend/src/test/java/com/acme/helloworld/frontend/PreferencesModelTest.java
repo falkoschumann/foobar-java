@@ -20,7 +20,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class PreferencesModelTests {
+public class PreferencesModelTest {
   private static PreferencesModel model;
   private static ObservableList<String> greetingWarningStyleClass;
 
@@ -33,7 +33,7 @@ public class PreferencesModelTests {
 
   @Test
   @Order(1)
-  void step1InitialState() {
+  void step1_initialState() {
     assertAll(
         () -> assertEquals("", model.greetingProperty().get(), "greeting"),
         () -> assertEquals("", model.greetingWarningProperty().get(), "greetingWarning"),
@@ -42,7 +42,7 @@ public class PreferencesModelTests {
 
   @Test
   @Order(2)
-  void step2ChangeGreeting() {
+  void step2_changeGreeting() {
     model.greetingProperty().set("Konnichiwa $user");
 
     assertAll(
@@ -57,7 +57,7 @@ public class PreferencesModelTests {
 
   @Test
   @Order(2)
-  void step2ChangeGreeting_Empty() {
+  void step2_changeGreeting_empty() {
     model.greetingProperty().set("Konnichiwa $user");
 
     model.greetingProperty().set("");
@@ -76,7 +76,7 @@ public class PreferencesModelTests {
 
   @Test
   @Order(3)
-  void step2ChangeGreeting_NoPlaceholder() {
+  void step2_changeGreeting_noPlaceholder() {
     model.greetingProperty().set("Konnichiwa $user");
 
     model.greetingProperty().set("Hello user");

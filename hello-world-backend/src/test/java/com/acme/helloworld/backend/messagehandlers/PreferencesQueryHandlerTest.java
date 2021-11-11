@@ -12,9 +12,9 @@ import com.acme.helloworld.contract.messages.queries.PreferencesQuery;
 import com.acme.helloworld.contract.messages.queries.PreferencesQueryResult;
 import org.junit.jupiter.api.Test;
 
-class PreferencesQueryHandlerTests {
+class PreferencesQueryHandlerTest {
   @Test
-  void testHandle() {
+  void handle_success() {
     var repository = new MemoryPreferencesRepository();
     repository.addExamples();
     var handler = new PreferencesQueryHandler(repository);

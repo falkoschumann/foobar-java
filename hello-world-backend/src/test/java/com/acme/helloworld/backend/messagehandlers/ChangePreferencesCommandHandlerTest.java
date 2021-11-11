@@ -8,21 +8,20 @@ package com.acme.helloworld.backend.messagehandlers;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.acme.helloworld.backend.adapters.MemoryPreferencesRepository;
-import com.acme.helloworld.contract.data.Bounds;
-import com.acme.helloworld.contract.messages.commands.ChangeMainWindowBoundsCommand;
+import com.acme.helloworld.contract.messages.commands.ChangePreferencesCommand;
 import com.acme.helloworld.contract.messages.commands.Success;
 import org.junit.jupiter.api.Test;
 
-class ChangeMainWindowBoundsCommandHandlerTests {
+class ChangePreferencesCommandHandlerTest {
   @Test
-  void testHandle() {
+  void handle_success() {
     var repository = new MemoryPreferencesRepository();
     repository.addExamples();
-    var handler = new ChangeMainWindowBoundsCommandHandler(repository);
+    var handler = new ChangePreferencesCommandHandler(repository);
 
-    var status = handler.handle(new ChangeMainWindowBoundsCommand(new Bounds(1, 2, 3, 4)));
+    var status = handler.handle(new ChangePreferencesCommand("Bonjour $user"));
 
     assertEquals(new Success(), status, "command status");
-    assertEquals(new Bounds(1, 2, 3, 4), repository.loadMainWindowBounds(), "main window bounds");
+    assertEquals("Bonjour $user", repository.loadGreeting(), "greeting");
   }
 }

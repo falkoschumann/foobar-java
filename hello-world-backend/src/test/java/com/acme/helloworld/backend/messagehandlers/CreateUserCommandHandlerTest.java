@@ -18,9 +18,9 @@ import com.acme.helloworld.contract.messages.commands.Success;
 import java.time.Instant;
 import org.junit.jupiter.api.Test;
 
-class CreateUserCommandHandlerTests {
+class CreateUserCommandHandlerTest {
   @Test
-  void testHandle() {
+  void handle_success() {
     var eventStore = new MemoryEventStore();
     eventStore.addExamples();
     var handler = new CreateUserCommandHandler(eventStore);
@@ -36,7 +36,7 @@ class CreateUserCommandHandlerTests {
   }
 
   @Test
-  void testHandle_UserAlreadyExists() {
+  void handle_userAlreadyExists() {
     var eventStore = new MemoryEventStore();
     eventStore.addExamples();
     var handler = new CreateUserCommandHandler(eventStore);
